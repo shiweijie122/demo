@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	div {
+		border: 1px solid red;
+		width: 218px;
+		height: 218px;
+		margin: 50px auto;
+	}
+	.hide {
+		display: none;
+	}
+</style>
+<script>
+	window.onload = function(){
+		//轮播次数
+		var n = 0;
+		//启动定时器,每2秒执行一次
+		setInterval(function(){
+			n++;
+			//获取所有的图片
+			var imgs = 
+				document.getElementsByTagName("img");
+			//将它们都隐藏
+			for(var i=0;i<imgs.length;i++) {
+				imgs[i].className = "hide";
+			}
+			//再将下一个图片显示
+			var next = n%imgs.length;
+			imgs[next].className = "";
+		},2000);
+	}
+</script>
+</head>
+<body>
+	<div>
+		<img src="../images/01.jpg"/>
+		<img src="../images/02.jpg" class="hide"/>
+		<img src="../images/03.jpg" class="hide"/>
+		<img src="../images/04.jpg" class="hide"/>
+		<img src="../images/05.jpg" class="hide"/>
+		<img src="../images/06.jpg" class="hide"/>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+

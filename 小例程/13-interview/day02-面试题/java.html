@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>JAVA基础部分-选择题</h1>
+<h4>(单选)1.在Java语言中，字符串“Java程序员”在内存中所占用的字节数是：（）。</h4>
+<p>A.10</p>
+<p>B.7</p>
+<p>C.13</p>
+<p>D.14</p>
+<h4>2. (单选)下列表达式中，可以得到精确结果的是（）。</h4>
+<p>A.double d1 = 3.0 - 2.6;</p>
+<p>B.double d4 = 2.5 * 1.5;</p>
+<p>C.double d2 = 30/300;</p>
+<p>D.double d3 = 1/2 + 0.5;</p>
+<h4>3.(多选)所谓“水仙花”数是一个整数等于各位数字立方的和，例如：153 = 1<em>1</em>1+5<em>5<em>5+3</em>3</em>3，下面的程序用于输出2~1000内的水仙花数：</h4>
+<pre><code>for (int n = 2; n &lt;= 1000; n++) { 
+    空白处  
+    if (s == n) { 
+        System.out.println(n); 
+    } 
+}  
+</code></pre>
+
+<p>下列选项中，空白处可以填入的代码是：（）。
+A.int s = 0, &emsp;n1 = n; &emsp;while (n1 &gt; 0) { int t = n1 % 10;&emsp; s += t * t * t; &emsp;n1 /= 10; }</p>
+<p>B.int s = 0,&emsp; n1 = n; &emsp;while (n1 &gt; 0) { int t = n1 / 10;&emsp;s+= t * t * t; &emsp;n1 %= 10; }</p>
+<p>C.int s = 0; &emsp;for(int n1 = n; n1&gt;0;&emsp; n1 /= 10) { int t = n1%10;&emsp; s += t * t * t; }</p>
+<p>D.int s = 0;&emsp; for(int n1 = n;&emsp; n1&gt;0; &emsp;n1 %= 10) { int t = n1 / 10;&emsp; s += t * t * t; }</p>
+<h4>4.下列语句序列执行后，k 的值是 (       )</h4>
+<pre><code>  int  x=6, y=10, k=5;
+  switch( x % y )
+  {
+       case 0:  k=x*y;
+       case 6:  k=x/y;
+       case 12:  k=x-y;
+       default:  k=x*y-x;
+  }
+</code></pre>
+
+<p>A.60</p>
+<p>B.5</p>
+<p>C.0</p>
+<p>D.54</p>
+<h4>5.设 a = 8，则表达式  a &gt;&gt;&gt; 2 的值是： （无符号右移动）(      )</h4>
+<p>A.1</p>
+<p>B.2</p>
+<p>C.3</p>
+<p>D.4</p>
+<h4>6.下列程序</h4>
+<pre><code>class Test{
+    public static void main(String[] args){
+        doSomething(1);
+        doSomething(1,2);
+    }
+    //insert code here
+}
+</code></pre>
+
+<p>在程序中插入下列哪一行代码可以编译通过：
+A static void doSomething(int[] args){}</p>
+<p>B static void doSomething(int... args){}</p>
+<p>C static coid doSomething(int...args,int x){}</p>
+<p>D static void doSomething(int x,int...args){}</p>
+<h1>简答题</h1>
+<h4>1.现有一个长度为20的数组，数组内的数字0-9之间的任意数字，统计出数组中每个元素出现的次数？</h4>
+<h4>现有一个字符串&quot;fdasafdasfdasa&quot;,现统计出子串&quot;as&quot;出现的次数.</h4>
+<h4>2.请描述冒泡排序算法的基本思想。</h4>
+<h4>3.一个数组中只有0，1两种数字，进行排序，0全部在前，1全部在后</h4>
+<h1>OOP部分</h1>
+<h4>1.(单选)关于下列代码说法正确的是：</h4>
+<pre><code>public class A {
+    private int counter = 0; 
+    public static int getInstanceCount() { 
+        return counter; 
+    } 
+    public A() { 
+        counter++; 
+    } 
+    public static void main(String[] args) { 
+        A a1 = new A(); 
+        A a2 = new A(); 
+        A a3 = new A();
+        System.out.println(A.getInstanceCount()); 
+    } 
+}
+</code></pre>
+
+<p>A.该类编译失败</p>
+<p>B.输出：1</p>
+<p>C.输出：3</p>
+<p>D.输出：0</p>
+<h4>2.试图编译和运行以下代码，将获得什么结果(JAVA)</h4>
+<pre><code>class Base {
+    int i = 99;
+    public void amethod() {
+        System.out.println(&quot;Base.amethod()&quot;);
+    }
+    Base() {
+        amethod();
+    }
+}
+public class RType extends Base {
+    int i = -1;
+    public static void main(String argv[]){
+        Base b = new RType();
+        System.out.print(b.i+&quot;\t&quot;);
+        b.amethod();
+        RType r = (RType)b;
+        System.out.print(r.i+&quot;\t&quot;);
+    }
+    public void amethod(){
+        System.out.print(&quot;RType.amethod()&quot;+&quot;\t&quot;);
+    }
+}
+</code></pre>
+
+<p>A RType.amethod	-1	RType.amethod	-1</p>
+<p>B RType.amethod	99	RType.amethod	-1</p>
+<p>C 99 RType.amethod	99</p>
+<p>D 编译时错误(Compile time error)</p>
+<h4>3、下边程序运行的结果是？ (        )</h4>
+<pre><code>class Base {
+ Base() { System.out.print(&quot;Base&quot;); }
+}
+public class Alpha extends Base {
+   public static void main( String[] args ) {
+        new Alpha();
+        new Base();
+  }
+ }
+</code></pre>
+
+<p>A.Base</p>
+<p>B.BaseBase</p>
+<p>C.程序编译失败.</p>
+<p>D.程序运行但没有任何输出</p>
+<h4>4.指出下列程序运行的结果</h4>
+<pre><code> public class Example{
+     String str=new String(&quot;good&quot;);
+     char[]ch={'a','b','c'};
+     public static void main(String args[]){
+         Example ex=new Example();
+         ex.change(ex.str,ex.ch);
+         System.out.print(ex.str+&quot; and &quot;);
+         System.out.print(ex.ch);
+     }
+     public void change(String str,char ch[]){
+         str=&quot;test ok&quot;;
+         ch[0]='g';
+     }
+ }
+</code></pre>
+
+<p>A.good and abc</p>
+<p>B.good and gbc</p>
+<p>C.test ok and abc</p>
+<p>D.test ok and gbc</p>
+<h1>OOP部分-简答题</h1>
+<h4>1.抽象类和接口的区别</h4>
+<h4>2.静态变量和实例变量的区别？</h4>
+<h4>3.String s = new String(&quot;xyz&quot;);创建了几个String Object ？</h4>
+<h4>4．字符串连接时为什么推荐使用StringBuffer而不是直接用String+String的方式，请简述原因？</h4>
+<h4>5.final, finally, finalize的区别。</h4>
+<h4>6.线程</h4>
+<p>继承Thread类 
+	如果某个类继承了Thread类,那么此时这个类就是一个线程类,如果要创建此类的线程对象  A extends Thread
+	A a = new A();
+	a.start()</p>
+<p>实现Runnable接口
+	如果某个类实现了Runnable接口,此时这个类不是线程类,这个类中只有将线程要执行的任务写好了</p>
+<pre><code>如果此时用用线程来执行这个任务
+A implements Runnable
+A a = new A();
+//创建一个线程对象指向该任务
+Thread th = new Thread(Runnable r,name);
+th.start()
+</code></pre>
+
+<p>生命周期:5种状态</p>
+<p>新建,就绪,运行,阻塞,死亡</p>
+<p>多线程并发问题:</p>
+<p>脏数据:污染了数据
+-前提条件:多个线程访问同一个对象</p>
+<p>如何避免脏数据的产生:线程同步 - synchronized</p>
+<p>可以用来修饰方法,代码块:本质是给对象加锁</p>
+<p>如果修饰方法:给调用方法的对象(this)加锁</p>
+<p>如果修饰代码块:
+	sychronized(要加锁的对象){}
+	一般情况下,加锁的对象都为this</p>
+<p>线程间的通信 - 线程间要交流</p>
+<p>生产者消费者</p>
+<p>Object类下的几个方法来实现了线程间的通信</p>
+<p>wait() :一定出现在sychronized的方法中</p>
+<p>notify()  notifyAll()</p>
+<p>线程池:</p>
+<p>Excutors.newFixedThreadPool(int nThread) - ExcutorService </p>
+<p>execute()</p>
+<p>ThreadLocal:将数据绑定到当前线程上,那么在整个线程过程中都可以使用该数据</p>
+<p>IO流:
+RandomAccessFile:随机访问流(任意访问流)</p>
+<p>特殊之处:</p>
+<p>1.这个流既可以读文件,也可以写文件</p>
+<p>2.可以定位到文件的任意位置,而且可以获取当前的偏移量</p>
+<p>RandomAccessFile(File dest,String mode)</p>
+<p>read()   write() - 按照字节</p>
+<p>seek(long pos)</p>
+<p>getFilePointer() - long</p>
+<h1>数据库部分-选择题</h1>
+<h4>1.当在执行过程中，如果QUANTITY的值是空的话，哪个语句将显示一个0？</h4>
+<p>A.SELECT id_number,100/quantity FROM inventory;</p>
+<p>B.SELECT id_number,NVL(100/quantity,0) FROM inventory;</p>
+<p>C.SELECT id_number,NULL(100/quantity,0) FROM inventory;</p>
+<p>D.SELECT id<em>number,TO</em>CHAR(100/quantity,0) FROM inventory;</p>
+<h4>2.分析下面SQL语句，在什么情况下引起这个语句失败？STUDEN表结构：ID NUMBER(9) FIRST<em>NAME VARCHAR2(25) LAST</em>NAME VARCHAR2(25)</h4>
+<pre><code>SELECT * FROM student WHERE id=
+(SELECT id FROM student WHERE UPPER(first_name)='KATE' AND UPPER(last_name)='HENRY');
+</code></pre>
+
+<p>A.在数据表中没有学生的名字是Kate Henry</p>
+<p>B.数据表中学生的名字叫Kate的多于一个</p>
+<p>C.数据表中的学生的名字叫Kate Henry的多于一个</p>
+<p>D.FIRST<em>NAME和LAST</em>NAME的值在数据库中是小写的</p>
+<h4>3.分析下面的SQL语句，这个语句为什么会出现一个错误？</h4>
+<pre><code>CREATE TABLE sale_items(id_number NUMBER(9),description VARCHAR(25))
+ AS SELECT id_number,description FROM inventory WHERE quantity&gt;500;
+</code></pre>
+
+<p>A.一个子句丢失</p>
+<p>B.一个关键字丢失</p>
+<p>C.where子句不能应用在创建表上</p>
+<p>D.数据类型在新表中不需要被定义</p>
+<h4>4.在SQL语言中，关于主键描述正确的是（）（多选）</h4>
+<p>A 只能包含一列</p>
+<p>B 可以包含两列</p>
+<p>C 可以包含一列或者多列</p>
+<p>D 以上都不正确</p>
+<h1>数据库简答题</h1>
+<h4>1.写SQL语句显示员工表中工资超过平均工资的员工。</h4>
+<h4>2.假如订单表orders用来存储订单信息，cid代表客户编号，money代表单次订购额，现要查询每个客户的订购次数和每个客户的订购总金额？</h4>
+<h4>统计单笔消费超过50元的用户总共的消费次数以及消费总金额,总金额&gt;2000</h4>
+<h4>3. 表PERSONNEL 的结构如下:</h4>
+<pre><code>ID NUMBER(9)
+NAME VARCHAR2(25)
+MANAGER_ID NUMBER(9)
+</code></pre>
+
+<p>在这里, 部门的管理者也看作是雇员，写出SQL语句查询每个雇员的姓名以及管理者的姓名</p>
+<h4>4.ORACLE数据库有哪几种约束类型？</h4>
+<h4>5.请分别写出mysql与oracle的分页查询语句（查询第3-第7条数据）</h4>
+<h4>6.写一个查询，来查询出挣到佣金(comm)的雇员姓名ename,部门名称，和部门所处的位置loc。（有employ表和dept表）</h4>
+<h4>7.写一个查询，查出在名字里面有一个&quot;A&quot;的所有雇员姓名ename和其所在的部门loc的名称。</h4>
+<h4>8．显示所有薪金高于各自部门平均薪金的人？</h4>
+<h4>9.查询平均成绩大于60分的同学的学号和平均成绩；</h4>
+<h1>Servlet部分</h1>
+<h4>1.JSP九大内置对象，Servlet域对象以及各自的作用范围</h4>
+<h4>2.说出Servlet的生命周期？</h4>
+<h4>5.请简述mvc架构。同时说明在自己熟悉的架构中mvc分别对应什么？</h4>
+<h1>框架部分</h1>
+<h4>1.请描述一下spring MVC工作原理。</h4>
+<h4>2.Spring的核心是什么？</h4>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

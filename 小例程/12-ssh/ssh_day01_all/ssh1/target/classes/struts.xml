@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+<!-- DTD: Doc Type 文档定义, 规定了XML文件中
+可以使用那些标签,和标签的嵌套关系 -->
+<struts>
+	<!-- name 属性就是一个标识,写啥都行,不能重复 -->
+	<!-- namespace 用于声明第一层请求web路径
+	 http://localhost:8080/ssh1/demo -->
+	<!-- extends 用于继承Struts2的默认配置 -->
+	<package name="demo" 
+		namespace="/demo"
+		extends="struts-default"> 
+		<!-- action 中的name是第二层 
+		 http://localhost:8080/ssh1/demo/hello.action -->
+		<!-- 请求 /demo/hello.action时候执行
+		DemoAction类中的控制方法 execute -->
+		<action name="hello" 
+			class="cn.tedu.action.DemoAction">
+			<!-- 当控制方法返回success时候
+			转发到 demo.jsp -->
+			<result name="success">
+				/WEB-INF/jsp/demo.jsp
+			</result>
+		</action>
+		
+		<!-- 浏览器到控制器传递参数 -->
+		<action name="param"
+			class="cn.tedu.action.ParamAction">
+			<result name="success">
+				/WEB-INF/jsp/demo.jsp
+			</result>
+		</action>
+		
+		<!-- 将表单数据打包为域模型对象传递到控制器 -->
+		<action name="user"
+			class="cn.tedu.action.UserAction"
+			method="save"> 
+			<result name="success">
+				/WEB-INF/jsp/demo.jsp
+			</result>
+		</action>
+		
+		<!-- 将控制器中的值展示到JSP上 -->
+		<action name="msg" 
+			class="cn.tedu.action.MessageAction">
+			<result name="success">
+				/WEB-INF/jsp/message.jsp
+			</result>	
+		</action>
+		
+		<!-- 重定向结果类型 -->
+		<action name="doc"
+			class="cn.tedu.action.DocAction">
+			<result name="doc" type="redirect"> 				
+				http://doc.tedu.cn
+			</result>	
+		</action>
+		
+		<!-- 重定向到其他控制器 -->
+		<action name="test"
+			class="cn.tedu.action.TestAction">
+			<result name="test"
+				type="redirectAction">
+				hello
+			</result>	
+		</action>
+		
+		<!-- 利用Stream Result 动态下载图片 -->
+		<action name="img"
+			class="cn.tedu.action.ImageAction">
+			<result name="img" type="stream">
+				<param name="inputName">
+					image
+				</param>
+				<param name="contentType">
+					image/png
+				</param>
+			</result>
+			<result name="error">
+				/WEB-INF/jsp/error.jsp
+			</result>
+		</action>
+	</package>
+</struts>
+
+
+
+
+
+
+
+
+

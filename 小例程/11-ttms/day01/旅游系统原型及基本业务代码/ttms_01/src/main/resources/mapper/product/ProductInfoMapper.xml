@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductInfoMapper">
+	
+	<!-- 查询产品编号中同一项目编号下的最大编号 -->
+	<select id="findMaxProductIdContainsPrjId" parameterType="java.lang.String" resultType="java.lang.String">
+		select max(right(prodId,3)) from product_info where prodId like CONCAT(#{prjId},'%');
+	</select>
+	
+	<insert id="saveProductInfo" parameterType="cn.tedu.ttms.product.entity.ProductInfo">
+		insert into product_info(prodId,prodName,numId,exText,prodIntro,srvcBeginDate,srvcEndDate,onlineDate,offlineDate,
+		quantity,minQty,price,classId,nights,contientId,startPlace,returnPlace,startDate,endDate,mgrId,note,
+		createdUser,createdTime,modifiedUser,modifiedTime) 
+		values(#{productInfo.prodId},#{productInfo.prodName},#{productInfo.numId},#{productInfo.exText},#{productInfo.prodIntro},
+			#{productInfo.srvcBeginDate},#{productInfo.srvcEndDate},#{productInfo.onlineDate},#{productInfo.offlineDate},
+			#{productInfo.quantity},#{productInfo.minQty},#{productInfo.price},#{productInfo.classId},#{productInfo.nights},
+			#{productInfo.contientId},#{productInfo.startPlace},#{productInfo.returnPlace},
+			#{productInfo.startDate},#{productInfo.endDate},#{productInfo.mgrId},#{productInfo.note},
+			#{productInfo.createdUser},NOW(),#{productInfo.modifiedUser},NOW())
+	</insert>
+	
+	<!-- 查询产品列表 -->
+	<select id="findProductInfos"  resultType="map">
+		select
+			pi.id,
+			prodId,
+			prodName,
+			state,
+			pt.id as numId,
+			tName,
+			srvcBeginDate,
+			srvcEndDate,
+			quantity,
+			soldQty,
+			price,
+			classId
+		from 
+			product_info pi,product_teams pt
+		<where> 
+			pi.numId = pt.id
+			<if test="productInfo.prodName!=null and productInfo.prodName!=''">
+				and prodName LIKE CONCAT('%',#{productInfo.prodName},'%') 
+			</if>
+			<if test="productInfo.prodId!=null and productInfo.prodId!=''">
+				and prodId LIKE CONCAT('%',#{productInfo.prodId},'%')
+			</if>
+			<if test="productInfo.srvcBeginDate!=null and productInfo.srvcBeginDate!=''">
+				and srvcBeginDate = #{productInfo.srvcBeginDate}
+			</if>
+			<if test="productInfo.srvcEndDate!=null and productInfo.srvcEndDate!=''">
+				and srvcEndDate = #{productInfo.srvcEndDate}
+			</if>
+			<if test="productInfo.state!=null">
+				and state = #{productInfo.state}
+			</if>
+			<if test="classIdList!=null and classIdList.size()>0">
+				and classId in
+				<foreach collection="classIdList" open="(" close=")" separator="," item="item">
+					#{item}
+				</foreach>
+			</if>
+			<if test="numIds!=null and numIds.size()>0">
+				and numId in
+				<!--  
+				1. 如果传入的是单参数且参数类型是一个List的时候，collection属性值为list
+   				2. 如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array
+    			3. 如果传入的参数是多个的时候，我们就需要把它们封装成一个Map了，当然单参数也可以封装成map，实际上如果你在传入参数的时候，在breast里面也是会把它封装成一个Map的，map的key就是参数名，所以这个时候collection属性值就是传入的List或array对象在自己封装的map里面的key  
+    			-->
+				<foreach collection="numIds" open="(" close=")" separator="," item="item">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		order by pi.modifiedTime desc
+		<if test="pageObj!=null">
+		LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+	</select>
+	
+	<!-- 查询rowCounts -->
+	<select id="getRowCounts" parameterType="cn.tedu.ttms.product.entity.ProductInfo" resultType="int">
+		select count(*) from product_info
+		<where> 
+			1=1
+			<if test="productInfo.prodName!=null and productInfo.prodName!=''">
+				and prodName LIKE CONCAT('%',#{productInfo.prodName},'%') 
+			</if>
+			<if test="productInfo.prodId!=null and productInfo.prodId!=''">
+				and prodId LIKE CONCAT('%',#{productInfo.prodId},'%')
+			</if>
+			<if test="productInfo.srvcBeginDate!=null and productInfo.srvcBeginDate!=''">
+				and srvcBeginDate = #{productInfo.srvcBeginDate}
+			</if>
+			<if test="productInfo.srvcEndDate!=null and productInfo.srvcEndDate!=''">
+				and srvcEndDate = #{productInfo.srvcEndDate}
+			</if>
+			<if test="productInfo.state!=null and productInfo.state!=''">
+				and state = #{productInfo.state}
+			</if>
+		</where>
+	</select>
+	<!-- 修改产品状态 -->
+	<update id="updateState">
+		update product_info set state = #{state} where id = #{prodId}
+	</update>
+	
+	<!-- 根据产品id查询产品信息  -->
+	<select id="findProdInfoById" parameterType="java.lang.Integer" resultType="map">
+		select 
+			id,
+			prodId,
+			prodName,
+			numId,
+			exText,
+			prodIntro,
+			srvcBeginDate,
+			srvcEndDate,
+			onlineDate,
+			offlineDate,
+			quantity,
+			minQty,
+			price,
+			classId as c3Id,
+			mgrId,
+			nights,
+			contientId,
+			startPlace,
+			returnPlace,
+			startDate,
+			endDate,
+			note
+		from
+			product_info
+		where
+		 	 id = #{prodId}
+	</select>
+	
+	<!-- 修改产品信息 -->
+	<update id="updateProdInfo" parameterType="cn.tedu.ttms.product.entity.ProductInfo">
+		update 
+			product_info 
+		set
+			prodName = #{productInfo.prodName},
+			numId = #{productInfo.numId},
+			exText = #{productInfo.exText},
+			prodIntro = #{productInfo.prodIntro},
+			srvcBeginDate = #{productInfo.srvcBeginDate},
+			srvcEndDate = #{productInfo.srvcEndDate},
+			onlineDate = #{productInfo.onlineDate},
+			offlineDate = #{productInfo.offlineDate},
+			quantity = #{productInfo.quantity},
+			minQty = #{productInfo.minQty},
+			price = #{productInfo.price},
+			classId = #{productInfo.classId},
+			nights = #{productInfo.nights},
+			startPlace = #{productInfo.startPlace},
+			returnPlace = #{productInfo.returnPlace},
+			startDate = #{productInfo.startDate},
+			endDate = #{productInfo.endDate},
+			mgrId = #{productInfo.mgrId},
+			note = #{productInfo.note},
+			modifiedUser = #{productInfo.modifiedUser},
+			modifiedTime = NOW()
+		where 
+			id = #{productInfo.id}
+		
+	</update>
+	
+	<!-- 库存分销：根据产品id查询产品部分信息 -->
+	<select id="viewProdInfoById" parameterType="java.lang.Integer" resultType="map">
+		select 
+			prodId,
+			prodName,
+			srvcBeginDate,
+			srvcEndDate,
+			quantity,
+			price,
+			state,
+			au.name as director  	
+		from
+			product_info pi,aut_users au
+		where 
+			pi.createdUser = au.userName
+		and 
+			pi.id=#{prodId}
+			
+	</select>
+	<!-- 根据产品id查询产品得晚数 -->
+	<select id="findProductNights" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select 
+			nights
+		from 
+			product_info
+		where 
+			id = #{prodId}
+	</select>
+	
+	<!-- 判断要删除的分类下是否有产品 -->
+	<select id="hasProduct" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			product_info
+		where
+			classId
+		in
+		<foreach collection="classList" open="(" close=")" separator="," item="item">
+			#{item}
+		</foreach>
+	</select>
+	<!-- 查看产品详情 - 基本信息 -->
+	<select id="findProductBasicInfo" parameterType="java.lang.Integer" resultType="map">
+		select 
+			exText,
+			prodIntro,
+			srvcBeginDate,
+			srvcEndDate,
+			onlineDate,
+			offlineDate,
+			quantity,
+			minQty,
+			price
+		from
+			product_info
+		where
+		 	 id = #{prodId}
+	</select>
+	<!-- 查看产品详情 - 旅游详细信息 -->
+	<select id="findProductDetailInfo" parameterType="java.lang.Integer" resultType="map">
+		select 
+			nights,
+			startPlace,
+			returnPlace,
+			startDate,
+			endDate,
+			note
+		from
+			product_info
+		where
+		 	 id = #{prodId}		
+	</select>
+</mapper>

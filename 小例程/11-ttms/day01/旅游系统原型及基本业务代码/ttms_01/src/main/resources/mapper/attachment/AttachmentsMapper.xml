@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.attachment.mapper.AttachmentsMapper">
+	<!-- 查询产品的附件列表 -->
+	<select id="findAttachmentsListByProdId" parameterType="java.lang.Integer" resultType="cn.tedu.ttms.attachment.entity.Attachement">
+		select
+			ra.id,
+			title,
+			fileName,
+			filePath,
+			ra.valid,
+			au.name as createdUser,
+			ra.createdTime
+		from 
+			resource_attachments  ra,aut_users au
+		where 
+			ra.createdUser = au.userName
+		and
+			belongId = #{prodId}
+	</select>
+	
+	<!-- 查询上传的文件摘要是否已经存在 -->
+	<select id="isExistFile" resultType="java.lang.Integer">
+		select 
+			count(*)
+		from
+			resource_attachments
+		where
+			digest = #{digest}
+		and
+			belongId = #{belongId}
+	</select>
+	
+	<!-- 保存上传的产品附件 -->
+	<insert id="saveProductAttachment" parameterType="cn.tedu.ttms.attachment.entity.Attachement">
+		insert into
+			resource_attachments
+			(title,fileName,contentType,filePath,belongId,
+			belongerCategory,digest,createdUser,createdTime,modifiedUser,modifiedTime)
+		values
+			(#{attachment.title},#{attachment.fileName},#{attachment.contentType},
+			#{attachment.filePath},#{attachment.belongId},#{attachment.belongerCategory},
+			#{attachment.digest},#{attachment.createdUser},NOW(),#{attachment.modifiedUser},NOW())
+	</insert>
+	
+	<!-- 切换附件启用禁用状态 -->
+	<update id="changeAttachmentState">
+		update
+			resource_attachments
+		set
+			valid = #{valid},
+			modifiedUser=#{userName},
+			modifiedTime = NOW()
+		where
+			id = #{attachmentId}
+	</update>
+	
+	<!-- 查找附件在服务器上的路径 -->
+	<select id="findFilePathById" parameterType="java.lang.Integer" resultType="map">
+		select
+			fileName,
+			filePath
+		from 
+			resource_attachments
+		where
+			id = #{attachmentId}
+	</select>
+</mapper>

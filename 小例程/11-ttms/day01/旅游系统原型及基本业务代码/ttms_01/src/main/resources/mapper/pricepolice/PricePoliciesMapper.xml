@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.pricepolice.mapper.PricePoliciesMapper">
+	<!-- 查询产品可选的价格政策 -->
+	<select id="findProductPricePoliciesList" resultType="map">
+		select
+			rp.id,
+			policyName,
+			rp.quantity,
+			rp.minQty,
+			reduce,
+			rp.note,
+			rp.beginDate,
+			rp.endDate,
+			pi.price
+		from 
+			resource_pricePolicies rp,product_info pi
+		where
+			rp.valid = 1
+		and 
+			pi.id = #{prodId}
+		and
+			pi.onlineDate&gt;=rp.beginDate
+		and 
+			pi.offlineDate&lt;=rp.endDate
+		<if test="pricePolice!=null and pricePolice.policyName!=null and pricePolice.policyName!=''">
+			and rp.policyName LIKE CONCAT('%',#{pricePolice.policyName},'%')
+		</if>
+		<if test="pricePolice!=null and pricePolice.beginDate!=null and pricePolice.beginDate!=''">
+			and rp.beginDate = #{pricePolice.beginDate}
+		</if>
+		<if test="pricePolice!=null and pricePolice.endDate!=null and pricePolice.endDate!=''">
+			and rp.endDate = #{pricePolice.endDate}
+		</if>
+		<if test="pageObj!=null">
+			LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+			
+	</select>
+	
+	<!-- 获取数据总数 -->
+	<select id="getRowCounts" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			resource_pricePolicies rp,product_info pi
+		where
+			rp.valid = 1
+		and 
+			pi.id = #{prodId}
+		and
+			rp.beginDate&gt;=pi.onlineDate
+		and 
+			rp.endDate&lt;=pi.offlineDate
+		<if test="pricePolice!=null and pricePolice.policyName!=null and pricePolice.policyName!=''">
+			and rp.policyName LIKE CONCAT('%',#{pricePolice.policyName},'%')
+		</if>
+		<if test="pricePolice!=null and pricePolice.beginDate!=null and pricePolice.beginDate!=''">
+			and rp.beginDate = #{pricePolice.beginDate}
+		</if>
+		<if test="pricePolice!=null and pricePolice.endDate!=null and pricePolice.endDate!=''">
+			and rp.endDate = #{pricePolice.endDate}
+		</if>
+	</select>
+</mapper>

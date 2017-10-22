@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript">
+function getAjax(){
+	var xhr = null;
+	if(window.XMLHttpRequest){
+		//非ie浏览器
+		xhr = new XMLHttpRequest();	
+	}else{
+		xhr = new ActiveXObject(
+				'MicroSoft.XMLHttp');
+	}
+	return xhr;
+}
+</script>
+</head>
+<body style="font-size:30px;">
+	<a href="javascript:alert(getAjax());">
+	ClickMe</a>
+	
+	
+	
+</body>
+</html>

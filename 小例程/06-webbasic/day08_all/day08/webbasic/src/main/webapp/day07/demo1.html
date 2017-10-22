@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	p {
+		border: 1px solid red;
+		width: 200px;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		font-size: 20px;
+	}
+</style>
+<script>
+	var id;
+	function start() {
+		if(id) {
+			//id非空,表示定时器已启动,
+			//就不要再次启动定时器了.
+			return;
+		}
+		id = setInterval(function(){
+			//获取客户端时间
+			var d = new Date();
+			//转为本地格式
+			var now = d.toLocaleTimeString();
+			//将时间显示到钟表的屏幕上
+			var p = document.getElementById("clock");
+			p.innerHTML = now;
+		},1000);
+	}
+	function stop() {
+		clearInterval(id);
+		//停止时将id清空,以便于下次启动定时器.
+		id = null;
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="开始"
+		onclick="start();"/>
+	<input type="button" value="停止"
+		onclick="stop();"/>
+	<p id="clock"></p>
+</body>
+</html>
+
+
+
+
+
+
+
+

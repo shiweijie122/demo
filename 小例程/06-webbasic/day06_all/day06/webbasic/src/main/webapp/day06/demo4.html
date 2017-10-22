@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function f1() {
+		var b = confirm("您确定要删除数据吗?");
+		console.log(b);
+	}
+	function f2() {
+		//启动周期性定时器:
+		//每隔1000ms调用一次函数.
+		//该方法返回定时器的ID,
+		//此ID用来停止定时器.
+		var n = 5;
+		var id = setInterval(function(){
+			console.log(n--);
+			if(n==0) {
+				clearInterval(id);
+			}
+		},1000);
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="删除"
+		onclick="f1();"/>
+	<input type="button" value="倒数"
+		onclick="f2();"/>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

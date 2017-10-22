@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	p {
+		border: 1px solid red;
+		width: 200px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+	}
+</style>
+<script>
+	var id;
+	function send() {
+		if(id) {
+			//id非空,定时器已启动,不必再次启动
+			return;
+		}
+		//显示正在发送
+		var p = document.getElementById("msg");
+		p.innerHTML = "正在发送";
+		//启动定时器,推迟3秒,显示已发送
+		id = setTimeout(function(){
+			p.innerHTML = "已发送";
+			//自动停止时,也要清空ID
+			id = null;
+		},3000);
+	}
+	function cancel() {
+		//只有定时器运行时,才能将其撤消
+		if(id) {
+			//显示已撤消
+			var p = document.getElementById("msg");
+			p.innerHTML = "已撤消";
+			//停止定时器
+			clearTimeout(id);
+			//清空ID,便于下次启动
+			id = null;
+		}
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="发送"
+		onclick="send();"/>
+	<input type="button" value="撤消"
+		onclick="cancel();"/>
+	<p id="msg"></p>
+</body>
+</html>
+
+
+
+
+

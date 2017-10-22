@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.team.mapper.TeamMapper">
+	<select id="findAllProductNumbers" resultType="map">
+		SELECT
+			pt.id,
+			tName,
+			au.name as mgrName,
+			au.id as mgrId
+		FROM 
+		 	product_teams pt,aut_users au
+		 where 
+		 	pt.managerId=au.id
+		
+	</select>
+	
+	<select id="findProductPrjId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select 
+			pp.prjId
+		from 
+			product_teams pt,product_projects pp
+		where 
+			pt.prjId = pp.id
+		and 
+			pt.id = #{numId}
+	</select>
+	
+	<!-- 根据产品的团号查询产品所属的项目名称 -->
+	<select id="findPrjNameByNumId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select
+			prjName
+		from 
+			product_teams pt,product_projects pp
+		where
+			pt.prjId = pp.id
+		and 
+			pt.id = #{numId}
+		
+	</select>
+	
+	<!-- 根据项目名称查询项目下所有的团号id -->
+	<select id="findNumIdsByPrjName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select 
+			pt.id
+		from 
+			product_teams pt,product_projects pp
+		where 
+			pt.prjId = pp.id
+		and 
+			pp.prjName LIKE CONCAT('%',#{prjName},'%')
+	</select>
+	<!--获取团号列表，用于展示所有团号信息  -->
+	<select id="teamList" resultType="map">
+		select
+			pt.id,
+			tName,
+			pp.prjName,
+			au.name as managerName,
+			au.phone,
+			pt.valid,
+			pt.note
+		from
+			product_teams pt,product_projects pp,aut_users au
+		where
+			pt.prjId = pp.id
+		and
+			pt.managerId = au.id
+		<if test="team!=null and team.tName!=null and team.tName!=''">
+			and pt.tName LIKE CONCAT('%',#{team.tName},'%')
+		</if>
+		<if test="team!=null and team.valid!=null">
+			and pt.valid = #{team.valid}
+		</if>
+		<if test="prjIdList!=null and prjIdList.size>0">
+			and pt.prjId in
+			<foreach collection="prjIdList" open="(" close=")" separator="," item="item">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY
+			pt.modifiedTime DESC
+		<if test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+			LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+	</select>
+	
+	<!-- 统计查询的数据的总数 -->
+	<select id="getRowCounts" resultType="java.lang.Integer">
+		select 
+			count(*)
+		from
+			product_teams
+		<where>
+			1=1
+			<if test="team!=null and team.tName!=null and team.tName!=''">
+			and tName LIKE CONCAT('%',#{team.tName},'%')
+		</if>
+		<if test="team!=null and team.valid!=null">
+			and valid = #{team.valid}
+		</if>
+		<if test="prjIdList!=null and prjIdList.size()>0">
+			and prjId in
+			<foreach collection="prjIdList" open="(" close=")" separator="," item="item">
+				#{item}
+			</foreach>
+		</if>
+		</where>
+			
+	</select>
+	
+	<!-- 切换团号启用禁用状态 -->
+	<update id="changeState" parameterType="cn.tedu.ttms.team.entity.Team">
+		update
+			product_teams
+		set
+			valid = #{team.valid},
+			modifiedUser = #{team.modifiedUser},
+			modifiedTime = NOW()
+		where
+			id = #{team.id}
+	</update>
+	
+	<!-- 保存团信息 -->
+	<insert id="saveTeam" parameterType="cn.tedu.ttms.team.entity.Team">
+		INSERT INTO
+			product_teams(tName,prjId,managerId,note,createdUser,createdTime,modifiedUser,modifiedTime)
+		VALUES
+			(#{team.tName},#{team.prjId},#{team.managerId},#{team.note},#{team.createdUser},NOW(),
+			#{team.modifiedUser},NOW())
+		
+	</insert>
+	
+	<!-- 获取负责任列表，用于展示下拉列表 -->
+	<select id="managerList" parameterType="java.lang.Integer" resultType="map">
+		SELECT
+			au.id,
+			au.name
+		FROM
+			aut_users au,product_projects pp,aut_organizations ao
+		WHERE
+			au.deptId = ao.id
+		AND
+			ao.id = pp.deptId
+		AND
+			pp.id = #{prjId}
+	</select>
+	<!-- 根据id查询团信息，用于修改 -->
+	<select id="findTeamInfoById" parameterType="java.lang.Integer" resultType="map">
+		SELECT
+			id,
+			tName,
+			prjId,
+			managerId,
+			note
+		FROM
+			product_teams
+		WHERE
+			id = #{teamId}
+	</select>
+	
+	<!-- 更新团信息 -->
+	<update id="updateTeam" parameterType="cn.tedu.ttms.team.entity.Team">
+		UPDATE
+			product_teams
+		SET
+			tName = #{team.tName},
+			prjId = #{team.prjId},
+			managerId = #{team.managerId},
+			note = #{team.note},
+			modifiedUser = #{team.modifiedUser},
+			modifiedTime = NOW()
+		WHERE
+			id = #{team.id}
+	</update>
+	
+</mapper>

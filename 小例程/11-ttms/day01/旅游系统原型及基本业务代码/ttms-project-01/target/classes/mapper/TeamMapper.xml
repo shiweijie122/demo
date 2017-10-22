@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.team.dao.TeamDao"> 
+    <select id="findObjects"  resultType="map">
+        SELECT 
+           t.id teamId,
+           t.name teamName,
+           p.id projectId,
+           p.name projectName,
+           t.valid,
+           t.note
+        FROM tms_teams t join tms_projects p
+        ON t.projectId=p.id
+        <where>
+			<if test="null != entity.name and  entity.name!=''">
+				AND t.name like CONCAT('%',#{entity.name},'%')
+			</if>
+			<if test="(null != entity.projectId)">
+				AND t.projectId = #{entity.projectId}
+			</if>
+	     </where>
+	     ORDER BY t.createdTime desc
+	     <if test="(pageObject!=null and pageObject.pageSize != 0)">
+			LIMIT #{pageObject.startIndex},#{pageObject.pageSize}
+		 </if>
+    </select>
+    
+    <select id="getRowCounts"  resultType="java.lang.Integer">
+       select count(*) from tms_teams t
+       <where>
+			<if test="null != entity.name and  entity.name!=''">
+				AND t.name like CONCAT('%',#{entity.name},'%')
+			</if>
+		    <if test="(null != entity.projectId)">
+				AND t.projectId = #{entity.projectId}
+			</if>
+	   </where>
+    </select>
+    
+    
+    <select id="findObjectById" parameterType="java.lang.Integer" resultType="map">
+        select * from tms_teams
+        where id=#{id};
+    </select>
+    
+    <insert id="insertObject" parameterType="cn.tedu.ttms.team.entity.Team">
+        INSERT INTO tms_teams
+		    (id,
+			name,
+			valid,
+			note,
+			projectId,
+			createdUser,
+			createdTime,
+			modifiedUser,
+			modifiedTime)
+		 VALUES
+		    (#{id},
+		    #{name},
+		    #{valid},
+		    #{note},
+		    #{projectId},
+		    #{createdUser},
+		    NOW(),
+		    #{modifiedUser},
+		    NOW())
+    </insert>
+    
+    <update id="updateObject" parameterType="cn.tedu.ttms.team.entity.Team">
+          update tms_teams
+		  set id=#{id},name=#{name},valid=#{valid},projectId=#{projectId},note=#{note},
+			  modifiedUser=#{modifiedUser},
+			  modifiedTime=NOW()
+		  where id=#{id};
+    </update>
+    
+    <update id="validById">
+         update tms_teams set valid=#{valid},modifiedTime=NOW()
+         <where>
+             <if test="ids!=null and ids.length>0">
+                id  in 
+                <foreach  collection="ids" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+             </if>
+         </where>
+    </update>
+    
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductPricePoliciesMapper">
+	<!-- 判断产品的价格政策是否已经存在 -->
+	<select id="isExistPricePolicy" resultType="java.lang.Integer">
+		select
+			count(*)
+		from 
+			product_pricePolicies
+		where
+			prodId = #{prodId}
+		and 
+			pricePolicyId = #{pricePolicyId}
+	</select>
+	<!-- 保存产品的价格政策 -->
+	 <insert id="saveProductPricePolicy" parameterType="cn.tedu.ttms.product.entity.ProductPricePolicy">
+	 	insert into
+	 		product_pricePolicies(prodId,pricePolicyId,createdUser,createdTime,modifiedUser,modifiedTime)
+	 	values
+	 		(#{policy.prodId},#{policy.pricePolicyId},#{policy.createdUser},NOW(),
+	 		#{policy.modifiedUser},NOW())
+	 	
+	 </insert>
+	 <!-- 查询产品的价格政策列表 -->
+	 <select id="findPricePoliciesByProdId" parameterType="java.lang.Integer" resultType="map">
+	 	select
+	 		rp.id,
+	 		policyName,
+	 		quantity,
+	 		minQty,
+	 		reduce,
+	 		note,
+	 		beginDate,
+	 		endDate
+	 	from
+	 		product_pricepolicies pp,resource_pricepolicies rp
+	 	where
+	 		pp.pricePolicyId = rp.id
+	 	and 
+	 		pp.prodId=#{prodId}
+	 </select>
+	 <!-- 删除产品的价格政策 -->
+	 <delete id="deleteProductPricePolicy">
+	 	delete from product_pricePolicies where prodId = #{prodId} and pricePolicyId = #{pricePolicyId}
+	 		
+	 </delete>
+</mapper>

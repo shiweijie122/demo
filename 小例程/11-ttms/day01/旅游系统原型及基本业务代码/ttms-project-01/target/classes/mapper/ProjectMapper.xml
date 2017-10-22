@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.project.dao.ProjectDao"> 
+    <select id="findObjects"  resultType="map">
+        select * from tms_projects p
+       <where>
+			<if test="null != entity.name and  entity.name!=''">
+				AND p.name like CONCAT('%',#{entity.name},'%')
+			</if>
+			<if test="(null != entity.valid)">
+				AND p.valid = #{entity.valid}
+			</if>
+	    </where>
+	   	<if test="(pageObject!=null and pageObject.pageSize != 0)">
+			LIMIT #{pageObject.startIndex},#{pageObject.pageSize}
+		</if>
+    </select>
+    
+    <!-- 查询项目ID，项目名称 -->
+    <select id="findOptions" resultType="map"> 
+       select id,name
+       from tms_projects
+       where valid=1;
+    </select>
+    
+    <select id="getRowCounts"  resultType="java.lang.Integer">
+       select count(*) from tms_projects p
+       <where>
+			<if test="null != entity.name and  entity.name!=''">
+				AND p.name like CONCAT('%',#{entity.name},'%')
+			</if>
+			<if test="null !=entity.valid">
+				AND p.valid = #{entity.valid}
+			</if>
+	   </where>
+    </select>
+    
+    
+    <select id="findObjectById" parameterType="java.lang.Integer" resultType="map">
+        select * from tms_projects
+        where id=#{id};
+    </select>
+    
+    <insert id="insertObject" parameterType="cn.tedu.ttms.project.entity.Project">
+        INSERT INTO tms_projects
+		    (id,
+			code,
+			name,
+			beginDate,
+			endDate,
+			valid,
+			note,
+			createdUser,
+			createdTime,
+			modifiedUser,
+			modifiedTime)
+		 VALUES
+		    (#{id},
+		    #{code},
+		    #{name},
+		    #{beginDate},
+		    #{endDate},
+		    #{valid},
+		    #{note},
+		    #{createdUser},
+		    NOW(),
+		    #{modifiedUser},
+		    NOW())
+    </insert>
+    
+    <update id="updateObject" parameterType="cn.tedu.ttms.project.entity.Project">
+          update tms_projects
+		  set id=#{id},code=#{code},name=#{name},beginDate=#{beginDate},endDate=#{endDate},valid=#{valid},note=#{note},
+			  modifiedUser=#{modifiedUser},
+			  modifiedTime=NOW()
+		  where id=#{id};
+    </update>
+    
+    <update id="validById">
+         update tms_projects set valid=#{valid},modifiedTime=NOW()
+         <where>
+             <if test="ids!=null and ids.length>0">
+                id  in 
+                <foreach  collection="ids" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+             </if>
+         </where>
+    </update>
+    
+</mapper>

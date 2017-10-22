@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function cal() {
+		var input = document.getElementById("ss");
+		//获取文本框内的算式
+		var ss = input.value;
+		//从网页上获得的任何数据都是字符串
+		console.log(typeof(ss));
+		try {
+			input.value = eval(ss);
+		} catch(e) {
+			input.value = "Error";
+		}
+	}
+</script>
+</head>
+<body>
+	<input type="text" id="ss"/>
+	<input type="button" value="="
+		onclick="cal();"/>
+</body>
+</html>
+
+
+
+
+
+

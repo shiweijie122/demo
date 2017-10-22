@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.user.mapper.UserMenuMapper">
+	<!-- 查询菜单 -->
+    <select id="getUserMenu" resultType="cn.tedu.ttms.user.entity.UserMenu">
+                select DISTINCT sft.id as id,sft.name as name,sft.parentId as parentId,sft.nodePath as nodePath,
+                       sft.level as level,sft.url as url,sft.target as target,sft.note as note,
+                       sft.sort as sort,sft.iconName as iconName,sft.iconOnly as iconOnly,sft.valid as valid
+                from  ( select sf.id,sf.name,sf.parentId,sf.nodePath,sf.level,sf.url,sf.target,sf.note,sf.sort,sf.iconName,sf.iconOnly,sf.valid
+	                    from aut_user_roles aur,aut_role_rights arr,sys_functions sf
+	                    where aur.userId = #{userId}
+	                    and  aur.roleId = arr.roleId
+	                    and  arr.functionId = sf.id) temp, sys_functions sft
+		       where (substr(temp.nodePath,1,4) = sft.id or substr(temp.nodePath,6,4) = sft.id or substr(temp.nodePath,11,4) = sft.id)
+		         and ((sft.level= #{level}) OR (#{level} = '2' and (temp.level= '2' OR sft.level= '3'))) and sft.valid = 1
+		       order by sft.level, sft.sort
+	</select>
+</mapper>

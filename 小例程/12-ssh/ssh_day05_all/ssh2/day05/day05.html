@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>day05</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>SSH</h1>
+<h2>Hibernate复杂关系映射</h2>
+<p>发帖业务:</p>
+<p><img src="1.png" /></p>
+<p>数据库表设计:</p>
+<pre><code>create table p_user(
+    u_id int not null auto_increment,
+    u_name varchar(100), 
+    u_password varchar(100),
+    u_nick varchar(50),
+    u_reg_date timestamp,
+    primary key(u_id)
+); 
+
+insert into p_user (u_id, u_name, 
+    u_password, u_nick, u_reg_date)values
+    (null, '李洪鹤', '123', '李大湿', now());
+
+create table p_post(
+    p_id int not null auto_increment,
+    user_id int,
+    p_time timestamp,
+    p_content varchar(800),
+    primary key(p_id)
+);
+
+insert into p_post (p_id, user_id, p_time,
+    p_content) values (null, 1, now(), 
+    '今天早晨看到大长腿, 嘿嘿!');
+
+insert into p_post (p_id, user_id, p_time,
+    p_content) values (null, 1, now(), 
+    '今天天气不错, 晒吐露皮了!');
+
+create table p_comment(
+    c_id int not null auto_increment,
+    post_id int,
+    c_name varchar(100),
+    c_time timestamp,
+    c_content varchar(800),
+    primary key(c_id)
+);
+
+insert into p_comment ( c_id, post_id, 
+    c_name, c_time, c_content) values 
+    (null, 1, '范传奇', now(), 
+    '在哪个动物玩呢?');
+
+insert into p_comment ( c_id, post_id, 
+    c_name, c_time, c_content) values 
+    (null, 1, '王克晶', now(), 
+    '李老师动物凶猛呀!');
+
+insert into p_comment ( c_id, post_id, 
+    c_name, c_time, c_content) values 
+    (null, 1, '范传奇', now(), 
+    '请李老师附湿一首!'); 
+</code></pre>
+
+<p>实现复杂关系映射:</p>
+<ol>
+<li>
+<p>创建项目</p>
+<ul>
+<li>
+<p>导入 SSH 包</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;
+  &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;
+  &lt;version&gt;2.5.12&lt;/version&gt;
+&lt;/dependency&gt;  
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+  &lt;artifactId&gt;poi&lt;/artifactId&gt;
+  &lt;version&gt;3.9&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;
+  &lt;artifactId&gt;struts2-json-plugin&lt;/artifactId&gt;
+  &lt;version&gt;2.5.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 引入Spring, 将控制器对象的控制权
+交给Spring(IOC), 由Spring负责创建控制器
+对象,为控制器对象注入属性(业务层对象) --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;
+  &lt;artifactId&gt;struts2-spring-plugin&lt;/artifactId&gt;
+  &lt;version&gt;2.5.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+  &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+  &lt;version&gt;4.3.9.Final&lt;/version&gt;
+&lt;/dependency&gt;
+    &lt;!-- 添加mysql驱动 (不要选5.1.6) --&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;5.1.40&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 添加alibaba的druid连接池依赖 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;druid&lt;/artifactId&gt;
+    &lt;version&gt;1.0.23&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+  &lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+
+
+&lt;!-- 添加junit用于实现单元测试 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;junit&lt;/groupId&gt;
+    &lt;artifactId&gt;junit&lt;/artifactId&gt;
+    &lt;version&gt;4.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+
+&lt;dependency&gt;
+  &lt;groupId&gt;jstl&lt;/groupId&gt;
+  &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+  &lt;version&gt;1.2&lt;/version&gt;
+&lt;/dependency&gt;   
+</code></pre>
+
+</li>
+<li>
+<p>配置 SSH </p>
+<pre><code>  &lt;filter&gt;
+    &lt;display-name&gt;StrutsPrepareAndExecuteFilter&lt;/display-name&gt;
+    &lt;filter-name&gt;StrutsPrepareAndExecuteFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;StrutsPrepareAndExecuteFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+  &lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+  &lt;context-param&gt;
+     &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+     &lt;param-value&gt;classpath:spring-*.xml&lt;/param-value&gt;
+  &lt;/context-param&gt;
+</code></pre>
+
+</li>
+</ul>
+</li>
+<li>
+<p>添加实体类</p>
+<pre><code>public class User implements Serializable{
+    private static final long serialVersionUID = -4278786782986241783L;
+
+    private Integer id;
+    private String name;
+    private String password;
+    private String nick;
+    private Timestamp regDate;
+
+    public User() {
+    }
+
+    public User(Integer id, String name, String password, String nick, Timestamp regDate) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.nick = nick;
+        this.regDate = regDate;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public Timestamp getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Timestamp regDate) {
+        this.regDate = regDate;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;User [id=&quot; + id + &quot;, name=&quot; + name + &quot;, password=&quot; + password + &quot;, nick=&quot; + nick + &quot;, regDate=&quot;
+                + regDate + &quot;]&quot;;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+}
+
+public class Comment implements Serializable{
+    private static final long serialVersionUID = -509170114115392183L;
+
+    private Integer id;
+    private Integer postId;
+    private String name;
+    private Timestamp time;
+    private String content;
+
+    public Comment() {
+    }
+
+    public Comment(Integer id, Integer postId, String name, Timestamp time, String content) {
+        super();
+        this.id = id;
+        this.postId = postId;
+        this.name = name;
+        this.time = time;
+        this.content = content;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Comment [id=&quot; + id + &quot;, postId=&quot; + postId + &quot;, name=&quot; + name + &quot;, time=&quot; + time + &quot;, content=&quot; + content
+                + &quot;]&quot;;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Comment other = (Comment) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+}
+
+
+public class Post implements Serializable{
+    private static final long serialVersionUID = 5327158863821240047L;
+
+    private Integer id;
+    private User user;
+    private Timestamp time;
+    private String content;
+    private Set&lt;Comment&gt; comments=new HashSet&lt;Comment&gt;();
+
+    public Post() {
+    }
+
+    public Post(Integer id, User user, Timestamp time, String content) {
+        super();
+        this.id = id;
+        this.user = user;
+        this.time = time;
+        this.content = content;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Set&lt;Comment&gt; getComments() {
+        return comments;
+    }
+
+    public void setComments(Set&lt;Comment&gt; comments) {
+        this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Post [id=&quot; + id + &quot;, user=&quot; + user + &quot;, time=&quot; + time + &quot;, content=&quot; + content + &quot;, comments=&quot;
+                + comments + &quot;]&quot;;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Post other = (Post) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+
+}
+</code></pre>
+
+</li>
+<li>
+<p>映射文件 User.hbm.xml</p>
+<pre><code>&lt;hibernate-mapping&gt;
+    &lt;class name=&quot;cn.tedu.entity.User&quot;
+        table=&quot;p_user&quot;&gt; 
+        &lt;id name=&quot;id&quot; column=&quot;u_id&quot;&gt;
+            &lt;generator class=&quot;identity&quot;/&gt;
+        &lt;/id&gt;
+        &lt;property name=&quot;name&quot; column=&quot;u_name&quot;/&gt;
+        &lt;property name=&quot;password&quot; column=&quot;u_password&quot;/&gt;
+        &lt;property name=&quot;nick&quot; column=&quot;u_nick&quot;/&gt;
+        &lt;property name=&quot;regDate&quot; column=&quot;u_reg_date&quot;/&gt;
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+</li>
+<li>
+<p>映射文件 Comment.hbm.xml</p>
+<pre><code>&lt;hibernate-mapping&gt;
+    &lt;class name=&quot;cn.tedu.entity.Comment&quot;
+        table=&quot;p_comment&quot;&gt; 
+        &lt;id name=&quot;id&quot; column=&quot;c_id&quot;&gt;
+            &lt;generator class=&quot;identity&quot;/&gt;
+        &lt;/id&gt;
+        &lt;property name=&quot;postId&quot; column=&quot;post_id&quot;/&gt;
+        &lt;property name=&quot;name&quot; column=&quot;c_name&quot;/&gt;
+        &lt;property name=&quot;time&quot; column=&quot;c_time&quot;/&gt;
+        &lt;property name=&quot;content&quot; column=&quot;c_content&quot;/&gt;
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+</li>
+<li>
+<p>映射文件 Post.hbm.xml</p>
+<pre><code>&lt;hibernate-mapping&gt;
+    &lt;class name=&quot;cn.tedu.entity.Post&quot;
+        table=&quot;p_post&quot;&gt; 
+        &lt;id name=&quot;id&quot; column=&quot;p_id&quot;&gt;
+            &lt;!-- IdentityGenerator 简写 identity --&gt;
+            &lt;generator class=&quot;identity&quot;/&gt;
+        &lt;/id&gt;
+        &lt;property name=&quot;time&quot; column=&quot;p_time&quot;/&gt;
+        &lt;property name=&quot;content&quot; column=&quot;p_content&quot;/&gt;
+        &lt;!-- 多对一映射: 当前多个post对应一个User
+        其中 user 是属性名, user_id是列名
+        class是映射以后的类型 --&gt;
+        &lt;many-to-one name=&quot;user&quot; 
+            class=&quot;cn.tedu.entity.User&quot;
+            column=&quot;user_id&quot;/&gt;
+        &lt;!-- set 集合映射 --&gt;
+        &lt;set name=&quot;comments&quot; &gt;
+            &lt;key column=&quot;post_id&quot;&gt;&lt;/key&gt;
+            &lt;one-to-many 
+                class=&quot;cn.tedu.entity.Comment&quot;/&gt;
+        &lt;/set&gt;  
+
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+<blockquote>
+<p>其中: many-to-one 用于映射 user 属性, set 用于映射 comments属性.</p>
+</blockquote>
+</li>
+<li>
+<p>测试:</p>
+<pre><code>public class TestCase {
+
+    ClassPathXmlApplicationContext ctx;
+    SessionFactory factory;
+    Session session;
+
+    @Before
+    public void init(){
+        ctx = new ClassPathXmlApplicationContext(
+                &quot;spring-pool.xml&quot;,
+                &quot;spring-hibernate.xml&quot;);
+        factory = ctx.getBean(
+            &quot;sessionFactory&quot;, SessionFactory.class);
+        session = factory.openSession();
+    }
+
+    @After
+    public void destory(){
+        session.close();
+        factory.close();
+        ctx.close();
+    }
+
+    @Test
+    public void testGet(){
+        Integer id=1;
+        Post post=(Post)session.get(
+            Post.class, id);
+        System.out.println(post);
+
+        User user = (User)session.get(
+                User.class, 1);
+        System.out.println(user);
+
+        Comment comment = (Comment)session.get(
+                Comment.class, 1);
+        System.out.println(comment);
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>在测试结果中可以看到, 完全能够获取关联的数据.</p>
+</blockquote>
+</li>
+</ol>
+<h2>懒惰属性加载</h2>
+<p>Hibernate 默认会懒惰(lazy)加载关联属性, 只有在访问属性时候才执行SQL读取属性的值:</p>
+<p>案例:</p>
+<pre><code>@Test
+public void testLazy(){
+    Integer id=1;
+    Post post=(Post)session.get(
+        Post.class, id);
+    System.out.println(post.getContent());
+    System.out.println(&quot;1&quot;);
+    //&quot;懒惰加载&quot;关联属性, 在第一次使用关联属性
+    //时候才执行响应的SQL,查询数据.     
+    System.out.println(post.getUser());
+    System.out.println(&quot;2&quot;);
+    System.out.println(post.getComments());
+}
+</code></pre>
+
+<blockquote>
+<p>测试结果说明, Hibernate在访问getUser和getComments时候才执行SQL获取数据. 这样有助于减少SQL数量, 优化系统性能.</p>
+</blockquote>
+<p>但是这个方式也会有风险, 当 session 被关闭以后, 访问懒惰加载的属性时候会出现session以及关闭无法加载数据的异常.</p>
+<p>案例:</p>
+<pre><code>@Test
+public void testLazy(){
+    Integer id=1;
+    Post post=(Post)session.get(
+        Post.class, id);
+    System.out.println(post.getContent());
+    System.out.println(&quot;1&quot;);
+    //&quot;懒惰加载&quot;关联属性, 在第一次使用关联属性
+    //时候才执行响应的SQL,查询数据.     
+    System.out.println(post.getUser());
+    session.close();
+    //在Session关闭以后, 懒惰加载将出现故障!\
+    //如果不是懒惰加载, 则不受影响!
+    System.out.println(&quot;2&quot;);
+    System.out.println(post.getComments());
+
+}
+</code></pre>
+
+<p>解决的办法有两个:</p>
+<ol>
+<li>在映射文件中使用 lazy=&quot;false&quot;, 这样Hibernate就会在获取数据时候理解加载数据, 避免延迟加载, 但是如果这个属性不被使用这个加载就造成性能问题.</li>
+<li>使用OpenSessionInView过滤器, 在视图层打开session 这样可以保障在软件的任何层次session都是打开的, 都可以随时执行SQL加载数据. 这个是软件中最常用的解决方案.</li>
+</ol>
+<p>在web.xml配置使用 OpenSessionInView:</p>
+<pre><code>  &lt;filter&gt;
+    &lt;display-name&gt;OpenSessionInViewFilter&lt;/display-name&gt;
+    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.orm.hibernate4.support.OpenSessionInViewFilter&lt;/filter-class&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;OpenSessionInViewFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+</code></pre>
+
+<blockquote>
+<p>注意: 一定在主控制器之前使用OpenSessionInView! </p>
+</blockquote>
+<p>经典面试题: SSH 里面如何避免在业务层/表现层访问懒惰属性加载失败?
+答案: 采用OpenSessionInView模式加以解决. 非懒惰加载也可以!</p>
+<h2>将Post显示到界面</h2>
+<p>原理:</p>
+<p><img src="2.png" /></p>
+<p>步骤:</p>
+<ol>
+<li>
+<p>数据层接口:</p>
+<pre><code>public interface PostDao {
+
+    public List&lt;Post&gt; findAll();
+
+}
+</code></pre>
+
+</li>
+<li>
+<p>实现数据层接口:</p>
+<pre><code>@Repository(&quot;postDao&quot;)
+@Transactional
+public class PostDaoImpl implements PostDao {
+
+    @Resource
+    private HibernateTemplate hibernateTemplate;
+
+    public List&lt;Post&gt; findAll() {
+        String hql = &quot;from Post&quot;;
+        List&lt;Post&gt; list= (List&lt;Post&gt;)
+                hibernateTemplate.find(hql);
+        return list;
+    }
+
+}
+</code></pre>
+
+</li>
+<li>
+<p>业务层接口</p>
+<pre><code>public interface PostService {
+    List&lt;Post&gt; list();
+}
+</code></pre>
+
+</li>
+<li>
+<p>实现业务层接口</p>
+<pre><code>@Service(&quot;postService&quot;)
+@Transactional
+public class PostServiceImpl 
+    implements PostService{
+
+    @Resource
+    private PostDao postDao;
+
+    public List&lt;Post&gt; list() {
+        return postDao.findAll();
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>注意: 一定要添加事务控制!</p>
+</blockquote>
+</li>
+<li>
+<p>添加控制器类</p>
+<pre><code>@Controller
+@Scope(&quot;prototype&quot;)
+public class PostAction {
+
+    @Resource 
+    private PostService postService;
+
+    private JsonResult result;
+    public JsonResult getResult() {
+        return result;
+    }
+    public void setResult(JsonResult result) {
+        this.result = result;
+    }
+
+    public String list(){
+        List&lt;Post&gt; list = postService.list();
+        result = new JsonResult(list);
+        return &quot;json&quot;;
+    }
+
+}
+</code></pre>
+
+<blockquote>
+<p>其中: JsonResult 类用于封装 Json 结果, 来自既有项目, 这里略过代码.</p>
+</blockquote>
+</li>
+<li>
+<p>配置控制器 struts.xml</p>
+<pre><code>&lt;struts&gt;
+    &lt;package name=&quot;post&quot; namespace=&quot;/post&quot; 
+        extends=&quot;json-default&quot;&gt;
+        &lt;action name=&quot;list&quot; method=&quot;list&quot; 
+            class=&quot;postAction&quot;&gt;
+            &lt;result name=&quot;json&quot; type=&quot;json&quot;&gt;
+                &lt;param name=&quot;root&quot;&gt;result&lt;/param&gt;
+            &lt;/result&gt;   
+        &lt;/action&gt;   
+    &lt;/package&gt;
+&lt;/struts&gt;
+</code></pre>
+
+</li>
+<li>
+<p>添加 spring-service.xml</p>
+<pre><code>&lt;context:component-scan 
+    base-package=&quot;cn.tedu.service&quot;/&gt;
+</code></pre>
+
+</li>
+<li>
+<p>部署测试:</p>
+<pre><code>http://localhost:8080/ssh2/post/list.action
+</code></pre>
+
+</li>
+<li>
+<p>Ajax 客户端 post.html</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;script type=&quot;text/javascript&quot;
+    src=&quot;jquery/jquery-3.2.1.min.js&quot; &gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+
+var SUCCESS = 1;
+
+$(function(){
+    //console.log(&quot;Hello&quot;);
+    loadPosts();
+});
+
+function loadPosts(){
+    var url = &quot;post/list.action&quot;;
+    $.getJSON(url, function(result){
+        if(result.state==SUCCESS){
+            console.log(result);
+            var list=result.data;
+            showPosts(list);
+        }else{
+            alert(result.state);
+        }
+    });
+}
+
+function showPosts(list){
+    $('#post-list').empty();
+    var div = $('&lt;div&gt;&lt;/div&gt;');
+    for(var i=0; i&lt;list.length; i++){
+        var post=list[i];
+        div.append('&lt;h2&gt;'+post.content+'&lt;/h2&gt;')
+            .append('&lt;p&gt;'+post.user.name+' '+
+                post.time+'&lt;/p&gt;')
+        .append(comments(post.comments));
+        $('#post-list').append(div);
+    }
+}
+
+function comments(list){
+    var ul = $('&lt;ul&gt;&lt;/ul&gt;');
+    for(var i=0; i&lt;list.length; i++){
+        var comment = list[i];
+        ul.append('&lt;li&gt;'+comment.name+':'+
+                comment.content+'&lt;/li&gt;');
+    }
+    return ul;
+}
+
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;留言板&lt;/h1&gt;
+    &lt;div id=&quot;post-list&quot;&gt;
+        &lt;div&gt;
+            &lt;h2&gt;name time&lt;/h2&gt;
+            &lt;p&gt;内容&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;name: 回复1&lt;/li&gt;
+                &lt;li&gt;name: 回复1&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+</li>
+</ol>
+<h2>拦截器</h2>
+<p>Struts2 提供了拦截器功能, Struts2 的核心功能就是利用一系列拦截器实现的:</p>
+<p><img src="3.png" /></p>
+<p>这些系统拦截器声明在: struts-default.xml 中:</p>
+<pre><code>    &lt;interceptors&gt;
+        &lt;interceptor name=&quot;alias&quot; class=&quot;com.opensymphony.xwork2.interceptor.AliasInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;autowiring&quot; class=&quot;com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;chain&quot; class=&quot;com.opensymphony.xwork2.interceptor.ChainingInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;conversionError&quot; class=&quot;org.apache.struts2.interceptor.StrutsConversionErrorInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;cookie&quot; class=&quot;org.apache.struts2.interceptor.CookieInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;cookieProvider&quot; class=&quot;org.apache.struts2.interceptor.CookieProviderInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;clearSession&quot; class=&quot;org.apache.struts2.interceptor.ClearSessionInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;createSession&quot; class=&quot;org.apache.struts2.interceptor.CreateSessionInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;debugging&quot; class=&quot;org.apache.struts2.interceptor.debugging.DebuggingInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;execAndWait&quot; class=&quot;org.apache.struts2.interceptor.ExecuteAndWaitInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;exception&quot; class=&quot;com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;fileUpload&quot; class=&quot;org.apache.struts2.interceptor.FileUploadInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;i18n&quot; class=&quot;org.apache.struts2.interceptor.I18nInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;logger&quot; class=&quot;com.opensymphony.xwork2.interceptor.LoggingInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;modelDriven&quot; class=&quot;com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;scopedModelDriven&quot; class=&quot;com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;params&quot; class=&quot;com.opensymphony.xwork2.interceptor.ParametersInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;actionMappingParams&quot; class=&quot;org.apache.struts2.interceptor.ActionMappingParametersInteceptor&quot;/&gt;
+        &lt;interceptor name=&quot;prepare&quot; class=&quot;com.opensymphony.xwork2.interceptor.PrepareInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;staticParams&quot; class=&quot;com.opensymphony.xwork2.interceptor.StaticParametersInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;scope&quot; class=&quot;org.apache.struts2.interceptor.ScopeInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;servletConfig&quot; class=&quot;org.apache.struts2.interceptor.ServletConfigInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;timer&quot; class=&quot;com.opensymphony.xwork2.interceptor.TimerInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;token&quot; class=&quot;org.apache.struts2.interceptor.TokenInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;tokenSession&quot; class=&quot;org.apache.struts2.interceptor.TokenSessionStoreInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;validation&quot; class=&quot;org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;workflow&quot; class=&quot;com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor&quot;/&gt;
+        &lt;interceptor name=&quot;store&quot; class=&quot;org.apache.struts2.interceptor.MessageStoreInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;checkbox&quot; class=&quot;org.apache.struts2.interceptor.CheckboxInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;datetime&quot; class=&quot;org.apache.struts2.interceptor.DateTextFieldInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;profiling&quot; class=&quot;org.apache.struts2.interceptor.ProfilingActivationInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;roles&quot; class=&quot;org.apache.struts2.interceptor.RolesInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;annotationWorkflow&quot; class=&quot;com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;multiselect&quot; class=&quot;org.apache.struts2.interceptor.MultiselectInterceptor&quot; /&gt;
+        &lt;interceptor name=&quot;noop&quot; class=&quot;org.apache.struts2.interceptor.NoOpInterceptor&quot; /&gt;
+
+        &lt;!-- Empty stack - performs no operations --&gt;
+        &lt;interceptor-stack name=&quot;emptyStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;noop&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Basic stack --&gt;
+        &lt;interceptor-stack name=&quot;basicStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;exception&quot;/&gt;
+            &lt;interceptor-ref name=&quot;servletConfig&quot;/&gt;
+            &lt;interceptor-ref name=&quot;prepare&quot;/&gt;
+            &lt;interceptor-ref name=&quot;checkbox&quot;/&gt;
+            &lt;interceptor-ref name=&quot;datetime&quot;/&gt;
+            &lt;interceptor-ref name=&quot;multiselect&quot;/&gt;
+            &lt;interceptor-ref name=&quot;actionMappingParams&quot;/&gt;
+            &lt;interceptor-ref name=&quot;params&quot;/&gt;
+            &lt;interceptor-ref name=&quot;conversionError&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample validation and workflow stack --&gt;
+        &lt;interceptor-stack name=&quot;validationWorkflowStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+            &lt;interceptor-ref name=&quot;validation&quot;/&gt;
+            &lt;interceptor-ref name=&quot;workflow&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample file upload stack --&gt;
+        &lt;interceptor-stack name=&quot;fileUploadStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;fileUpload&quot;/&gt;
+            &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample model-driven stack  --&gt;
+        &lt;interceptor-stack name=&quot;modelDrivenStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;
+            &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample action chaining stack --&gt;
+        &lt;interceptor-stack name=&quot;chainStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;chain&quot;/&gt;
+            &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample i18n stack --&gt;
+        &lt;interceptor-stack name=&quot;i18nStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;i18n&quot;/&gt;
+            &lt;interceptor-ref name=&quot;basicStack&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- An example of the paramsPrepareParams trick. This stack
+             is exactly the same as the defaultStack, except that it
+             includes one extra interceptor before the prepare interceptor:
+             the params interceptor.
+
+             This is useful for when you wish to apply parameters directly
+             to an object that you wish to load externally (such as a DAO
+             or database or service layer), but can't load that object
+             until at least the ID parameter has been loaded. By loading
+             the parameters twice, you can retrieve the object in the
+             prepare() method, allowing the second params interceptor to
+             apply the values on the object. --&gt;
+        &lt;interceptor-stack name=&quot;paramsPrepareParamsStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;exception&quot;/&gt;
+            &lt;interceptor-ref name=&quot;alias&quot;/&gt;
+            &lt;interceptor-ref name=&quot;i18n&quot;/&gt;
+            &lt;interceptor-ref name=&quot;checkbox&quot;/&gt;
+            &lt;interceptor-ref name=&quot;datetime&quot;/&gt;
+            &lt;interceptor-ref name=&quot;multiselect&quot;/&gt;
+            &lt;interceptor-ref name=&quot;params&quot;/&gt;
+            &lt;interceptor-ref name=&quot;servletConfig&quot;/&gt;
+            &lt;interceptor-ref name=&quot;prepare&quot;/&gt;
+            &lt;interceptor-ref name=&quot;chain&quot;/&gt;
+            &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;
+            &lt;interceptor-ref name=&quot;fileUpload&quot;/&gt;
+            &lt;interceptor-ref name=&quot;staticParams&quot;/&gt;
+            &lt;interceptor-ref name=&quot;actionMappingParams&quot;/&gt;
+            &lt;interceptor-ref name=&quot;params&quot;/&gt;
+            &lt;interceptor-ref name=&quot;conversionError&quot;/&gt;
+            &lt;interceptor-ref name=&quot;validation&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+            &lt;interceptor-ref name=&quot;workflow&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- A complete stack with all the common interceptors in place.
+             Generally, this stack should be the one you use, though it
+             may do more than you need. Also, the ordering can be
+             switched around (ex: if you wish to have your servlet-related
+             objects applied before prepare() is called, you'd need to move
+             servletConfig interceptor up.
+
+             This stack also excludes from the normal validation and workflow
+             the method names input, back, and cancel. These typically are
+             associated with requests that should not be validated.
+             --&gt;
+        &lt;interceptor-stack name=&quot;defaultStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;exception&quot;/&gt;
+            &lt;interceptor-ref name=&quot;alias&quot;/&gt;
+            &lt;interceptor-ref name=&quot;servletConfig&quot;/&gt;
+            &lt;interceptor-ref name=&quot;i18n&quot;/&gt;
+            &lt;interceptor-ref name=&quot;prepare&quot;/&gt;
+            &lt;interceptor-ref name=&quot;chain&quot;/&gt;
+            &lt;interceptor-ref name=&quot;scopedModelDriven&quot;/&gt;
+            &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;
+            &lt;interceptor-ref name=&quot;fileUpload&quot;/&gt;
+            &lt;interceptor-ref name=&quot;checkbox&quot;/&gt;
+            &lt;interceptor-ref name=&quot;datetime&quot;/&gt;
+            &lt;interceptor-ref name=&quot;multiselect&quot;/&gt;
+            &lt;interceptor-ref name=&quot;staticParams&quot;/&gt;
+            &lt;interceptor-ref name=&quot;actionMappingParams&quot;/&gt;
+            &lt;interceptor-ref name=&quot;params&quot;/&gt;
+            &lt;interceptor-ref name=&quot;conversionError&quot;/&gt;
+            &lt;interceptor-ref name=&quot;validation&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+            &lt;interceptor-ref name=&quot;workflow&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+            &lt;interceptor-ref name=&quot;debugging&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- The completeStack is here for backwards compatibility for
+             applications that still refer to the defaultStack by the
+             old name --&gt;
+        &lt;interceptor-stack name=&quot;completeStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;defaultStack&quot;/&gt;
+        &lt;/interceptor-stack&gt;
+
+        &lt;!-- Sample execute and wait stack.
+             Note: execAndWait should always be the *last* interceptor. --&gt;
+        &lt;interceptor-stack name=&quot;executeAndWaitStack&quot;&gt;
+            &lt;interceptor-ref name=&quot;execAndWait&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+            &lt;interceptor-ref name=&quot;defaultStack&quot;/&gt;
+            &lt;interceptor-ref name=&quot;execAndWait&quot;&gt;
+                &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel&lt;/param&gt;
+            &lt;/interceptor-ref&gt;
+        &lt;/interceptor-stack&gt;
+
+   &lt;/interceptors&gt;
+
+   &lt;default-interceptor-ref name=&quot;defaultStack&quot;/&gt;
+</code></pre>
+
+<blockquote>
+<p>defaultStack 是全局默认的拦截器栈, 在用户使用自定义拦截器使用, 建议先调用defaultStack.</p>
+</blockquote>
+<p>案例:</p>
+<ol>
+<li>
+<p>编写拦截器类:</p>
+<pre><code>@Component
+public class DemoInterceptor 
+    implements Interceptor {
+
+    public void destroy() {
+    }
+
+    public void init() {
+    }
+
+    public String intercept(
+            ActionInvocation invocation) 
+            throws Exception {
+        System.out.println(&quot;开始&quot;);
+        long t1 = System.currentTimeMillis();
+        String val = invocation.invoke();
+        long t2 = System.currentTimeMillis();
+        System.out.println(&quot;结束:&quot;+val+&quot;:&quot;+(t2-t1));
+        return val;
+    }
+
+}
+</code></pre>
+
+</li>
+<li>
+<p>配置 spring-struts.xml:</p>
+<pre><code>&lt;context:component-scan 
+    base-package=&quot;cn.tedu.web&quot;/&gt;
+</code></pre>
+
+</li>
+<li>
+<p>配置struts.xml</p>
+<pre><code>&lt;interceptors&gt;
+    &lt;interceptor name=&quot;demo&quot; 
+        class=&quot;demoInterceptor&quot;/&gt;
+
+    &lt;interceptor-stack name=&quot;demoStack&quot;&gt;
+        &lt;!-- 将demo拦截器与defaultStack组成新拦截器栈demoStack --&gt;
+        &lt;interceptor-ref name=&quot;defaultStack&quot;/&gt;
+        &lt;interceptor-ref name=&quot;demo&quot;/&gt;
+    &lt;/interceptor-stack&gt;
+&lt;/interceptors&gt;
+
+&lt;!-- 使用 demoStack 作为默认的系列拦截器 --&gt;
+&lt;default-interceptor-ref name=&quot;demoStack&quot;/&gt;
+</code></pre>
+
+</li>
+<li>
+<p>测试: </p>
+</li>
+</ol>
+<p>拦截器与AOP和过滤器的工作层次:</p>
+<p><img src="4.png" /></p>
+<hr />
+<h2>作业</h2>
+<ol>
+<li>实现 帖子显示功能</li>
+<li>实现发帖功能</li>
+</ol>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

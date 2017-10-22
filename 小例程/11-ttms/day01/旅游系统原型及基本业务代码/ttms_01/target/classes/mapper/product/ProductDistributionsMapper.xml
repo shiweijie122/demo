@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductDistributionMapper">
+	<!-- 根据产品id查询该产品的所有分销商 -->
+	<select id="findDistListByProdId" parameterType="java.lang.Integer" resultType="map">
+		select 
+			distId,
+			name as distName,
+			distQty,
+			beginDate,
+			endDate
+		from 
+			product_distributions pd,res_companies rc 
+		where 
+			pd.distId = rc.id 
+		and 
+			pd.prodId = #{prodId}
+	</select>
+	
+	<!-- 查询所有分销商和渠道商，用于加载分销商下拉列表 -->
+	<select id="findDistributionInfos" resultType="map">
+		select 
+			id,
+			name
+		from 
+			res_companies
+		where 
+			type=2 or type=3 and valid=1
+	</select>
+	
+	<!-- 根据分销商id查询分销商类型是分销商还是渠道商 -->
+	<select id="findDistributionTypeById" parameterType="java.lang.Integer" resultType="int">
+		select type from res_companies where id=#{distId}
+	</select>
+	
+	<!-- 添加产品分销商 -->
+	<insert id="saveProductDistribution" parameterType="cn.tedu.ttms.product.entity.ProductDistribution">
+		insert into 
+			product_distributions(prodId,distId,distType,beginDate,endDate,
+				distQty,createdUser,createdTime,modifiedUser,modifiedTime) 
+		values(#{distribution.prodId},#{distribution.distId},#{distribution.distType},#{distribution.beginDate},
+				#{distribution.endDate},#{distribution.distQty},#{distribution.createdUser},NOW(),
+				#{distribution.modifiedUser},NOW())
+	</insert>
+	<!-- 查询产品分销商信息 ，用于用户修改-->
+	<select id="findProductDistribution" resultType="map">
+		select 
+			beginDate,
+			endDate,
+			distQty,
+			distId,
+			name as distName
+		from 
+			product_distributions,res_companies
+		where 
+			distId = id
+		and
+			distId=#{distId}
+		and 
+			prodId = #{prodId}
+		
+	</select>
+	
+	<!-- 修改更新用户信息 -->
+	<update id="updateProductDistribution" parameterType="cn.tedu.ttms.product.entity.ProductDistribution">
+		update 
+			product_distributions
+		set
+			beginDate=#{productDistribution.beginDate},
+			endDate = #{productDistribution.endDate},
+			distQty = #{productDistribution.distQty},
+			modifiedUser = #{productDistribution.modifiedUser},
+			modifiedTime = NOW()
+		where 
+			prodId = #{productDistribution.prodId}
+		and 
+			distId = #{productDistribution.distId}
+	
+	</update>
+	
+	<delete id="deleteProductDist">
+		delete from product_distributions
+		where
+			prodId = #{prodId}
+		and 
+			distId = #{distId}
+	</delete>
+</mapper>

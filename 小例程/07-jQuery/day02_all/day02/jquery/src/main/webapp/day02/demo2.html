@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	function f1() {
+		//创建节点
+		var li = $("<li>天津</li>");
+		//追加节点
+		$("ul").append(li);
+	}
+	function f2() {
+		//创建节点
+		var li = $("<li>南京</li>");
+		//插入节点
+		$("#gz").after(li);
+	}
+	function f3() {
+		//删除节点
+		$("li:last").remove();
+	}
+	$(function(){
+		//假设调用者传入了如下对象:
+		var li = $("#gz");
+		//父亲
+		console.log(li.parent());
+		//哥哥
+		console.log(li.prev());
+		//兄弟
+		console.log(li.siblings());
+		//后代
+		console.log($("ul").find("li[id]"));
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" value="追加"
+			onclick="f1();"/>
+		<input type="button" value="插入"
+			onclick="f2();"/>
+		<input type="button" value="删除"
+			onclick="f3();"/>
+	</p>
+	<ul>
+		<li>北京</li>
+		<li>上海</li>
+		<li id="gz">广州</li>
+		<li>深圳</li>
+		<li>杭州</li>
+	</ul>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	#gg {
+		height: 500px;
+		background-color: red;
+	}
+	#gg>input {
+		float: right;
+		margin: 5px;
+	}
+</style>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	$(function(){
+		//给按钮x绑定单击事件
+		$("#gg>input").click(function(){
+			$("#gg").slideUp(500);
+		});
+		//推迟3秒
+		setTimeout(function(){
+			//自动点一下按钮x,即
+			//使用jQuery模拟按钮的单击事件.
+			$("#gg>input").trigger("click");
+		},3000);
+	});
+</script>
+</head>
+<body>
+	<div id="gg">
+		<input type="button" value="x"/>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+

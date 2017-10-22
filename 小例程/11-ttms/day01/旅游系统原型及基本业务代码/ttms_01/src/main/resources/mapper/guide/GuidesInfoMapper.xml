@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.guide.mapper.GuidesInfoMapper">
+	<!-- 查询所有可选的导游信息 -->
+	<select id="findGuides" resultType="map">
+		select
+			id,
+			certificateNo,
+			name,
+			engName,
+			gender,
+			email,
+			language,
+			country,
+			contact,
+			note
+		from 
+			resource_guidesInfo
+		where
+			valid = 1
+			<if test="guidesInfo!=null and guidesInfo.certificateNo!=null and guidesInfo.certificateNo!=''">
+				and certificateNo LIKE CONCAT('%',#{guidesInfo.certificateNo},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.name!=null and guidesInfo.name!=''">
+				and name LIKE CONCAT('%',#{guidesInfo.name},'%')
+				or engName LIKE CONCAT('%',#{guidesInfo.name},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.gender!=null and guidesInfo.gender!=''">
+				and gender = #{guidesInfo.gender}
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.email!=null and guidesInfo.email!=''">
+				and email LIKE CONCAT('%',#{guidesInfo.email},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.language!=null and guidesInfo.language!=''">
+				and language LIKE CONCAT('%',#{guidesInfo.language},'%') 
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.country!=null and guidesInfo.country!=''">
+				and country LIKE CONCAT('%',#{guidesInfo.country},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.contact!=null and guidesInfo.contact!=''">
+				and contact LIKE CONCAT('%',#{guidesInfo.contact},'%') 
+			</if>
+		order by
+			modifiedTime	
+		<if test="pageObj!=null">
+		LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>		 
+	</select>
+	
+	<!-- 查询总共多少条数据 -->
+	<select id="getGuidesRowCounts" resultType="java.lang.Integer">
+		select count(*) from resource_guidesInfo
+		where
+			valid = 1
+			<if test="guidesInfo!=null and guidesInfo.certificateNo!=null and guidesInfo.certificateNo!=''">
+				and certificateNo LIKE CONCAT('%',#{guidesInfo.certificateNo},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.name!=null and guidesInfo.name!=''">
+				and name LIKE CONCAT('%',#{guidesInfo.name},'%')
+				or engName LIKE CONCAT('%',#{guidesInfo.name},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.gender!=null and guidesInfo.gender!=''">
+				and gender = #{guidesInfo.gender}
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.email!=null and guidesInfo.email!=''">
+				and email LIKE CONCAT('%',#{guidesInfo.email},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.language!=null and guidesInfo.language!=''">
+				and language LIKE CONCAT('%',#{guidesInfo.language},'%') 
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.country!=null and guidesInfo.country!=''">
+				and country LIKE CONCAT('%',#{guidesInfo.country},'%')
+			</if>
+			<if test="guidesInfo!=null and guidesInfo.contact!=null and guidesInfo.contact!=''">
+				and contact LIKE CONCAT('%',#{guidesInfo.contact},'%') 
+			</if>
+	</select>
+</mapper>

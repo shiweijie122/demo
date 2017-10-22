@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	$(function(){
+		//1.读写节点的内容
+		//html() == innerHTML
+		console.log($("p:first").html());
+		$("p:first").html("jQuery支持<u>读写</u>节点的操作");
+		//text() == innerText
+		console.log($("p:eq(1)").text());
+		$("p:eq(1)").text("jQuery支持<u>增删</u>节点的操作");
+		//2.读写节点的值
+		//val() == value
+		console.log($(":button:first").val());
+		$(":button:first").val("BBB");
+		//3.读写节点的属性
+		//attr() == get/setAttribute()
+		console.log($("img:first").attr("src"));
+		$("img:first").attr("src","../images/02.jpg");
+	});
+</script>
+</head>
+<body>
+	<p>jQuery支持<b>读写</b>节点的操作</p>
+	<p>jQuery支持<b>增删</b>节点的操作</p>
+	<p>jQuery支持<b>查询</b>节点的操作</p>
+	<p>
+		<input type="button" value="AAA"/>
+	</p>
+	<p>
+		<img src="../images/01.jpg"/>
+	</p>
+</body>
+</html>
+
+
+
+
+
+

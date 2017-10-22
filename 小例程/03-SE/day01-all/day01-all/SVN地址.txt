@@ -1,0 +1,4 @@
+http://svn.tedu.cn/svn/1704se/stu0001
+       服务器名        班级目录 用户名 
+
+用户名: stu0001  密码：

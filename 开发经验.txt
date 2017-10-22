@@ -1,0 +1,96 @@
+cmmi 软件成熟度等级  低到高：1-5级
+
+OCP原则(开闭原则:对扩展开放,对修改关闭)
+<<模式与重构>>
+
+Ctrl+O ：查看类结构
+Ctrl+T : 查看类的父子类
+Alt+Shift+M : 将选中的代码提取为一个方法
+
+单例模式：
+	class Context{
+		private static Context context = new Context();
+		
+		private Context() {}
+		
+		public static Context getInstance(){
+			return context;
+		}
+	}
+	
+网页设计规范:2个分离
+	1.数据(html)与样式(css)分离
+	2.数据(html)与行为(js)分离
+	
+web项目的开发模式：Model1,Model2,框架
+
+MVC模式：
+  经典的设计模式，是代码的分层思想:
+      M：即Model，业务层，负责处理业务
+	  V：即View，视图层，负责显示数据
+	  C：即Controller，控制层，负责调度，是M和V的桥梁
+  它能对代码解耦，从而便于团队的开发及维护。
+  
+  
+JavaBean规范的类
+  1.有包
+  2.有private属性
+  3.有无参构成器
+  4.实现序列化接口（Serializable）
+  5.有get/set方法
+  
+jar包：
+	读写XML: dom4j: 
+	Orecle数据库连接: ojdbc(10.2.0.4.0)
+	mySQL数据库连接: mysql(5.1.38)
+	apache数据库连接池: dbcp(1.4) 
+	JSTL: jstl
+	spring容器(框架): spring-webmvc(org.springframework 3.2.8 )
+	spring注解:　annotation(javax.xxx)
+	spring-jdbc:　spring-jdbc(org.springframework 3.2.8 )
+	mybatis持久层框架:　mybatis(3.2.8)
+	spring集成mybatis:　mybatis-spring(1.2.2)
+	JSON: jackson-annotations(2.2.3)
+		  jackson-core(2.2.3)
+		  jackson-databind(2.2.3)
+		  
+
+springBoot
+持久层试题OCJP	
+UML统一建模语言 ROSE建模工具
+Bootstrap优势
+
+框架：
+	shiro
+	springboot
+jboos weblogic	
+
+--java中的定时任务如何处理?处理方式有什么不同?
+	1)Timer
+	2)ScheduledExecutorSevice
+--一个线程如何顺序处理多个任务?(多个任务存哪)
+	1)BlockingQueue队列
+--java中如何为目标对象创建动态代理对象
+	1)Proxy
+--spring IOC 如何创建对象?
+	1)XML(cn.tedu.ttms.Project)
+	2)注解(@Service,@Controller...)
+--spring AOP 如何为目标对象创建的代理对象?
+
+spring控制器 线程安全解决:将控制器设计成无状态的(没有公共变量:没有变量被多个线程同时读写)
+struts2控制器 线程安全解决:每个线程创建一个对象
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

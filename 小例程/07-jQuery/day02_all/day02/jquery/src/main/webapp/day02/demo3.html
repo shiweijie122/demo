@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.important {
+		color: red;
+	}
+	.big {
+		font-size: 30px;
+	}
+</style>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	$(function(){
+		$("p").addClass("big").addClass("important");
+		$("p").removeClass("big").removeClass("important");
+		console.log($("p").hasClass("big"));
+		setInterval(function(){
+			$("p").toggleClass("big");
+		},500);
+	});
+</script>
+</head>
+<body>
+	<p>jQuery对样式提供了丰富的支持</p>
+</body>
+</html>
+
+
+
+
+
+
+

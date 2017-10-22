@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- 1.表单元素:
+		声明表单的范围,只有在此范围内
+		输入的数据可以提交给服务器.
+		action:声明表单提交的目标
+		method,enctype:将来再讲 -->
+	<form action="http://www.tmooc.cn">
+		<!-- 2.表单控件:用来输入数据. -->
+		<!-- 2.1 input元素(9):
+			标签名是input,type属性不同 -->
+		<!-- 文本框
+			value:默认值
+			maxlength:最大长度
+			readonly:只读 -->
+		<p>
+			账号:<input type="text" value="abc"
+				maxlength="10" readonly/>
+		</p>
+		<!-- 密码框:属性同上 -->
+		<p>
+			密码:<input type="password"/>
+		</p>
+		<!-- 单选框
+			name:组名,同一组radio彼此互斥.
+			checked:设置默认选中.
+			value:将来再讲. -->
+		<p>
+			性别:
+			<input type="radio" name="sex" checked/>男
+			<input type="radio" name="sex"/>女
+		</p>
+		<!-- 多选框
+			checked:设置默认选中.
+			name,value:将来再讲. -->
+		<p>
+			兴趣:
+			<input type="checkbox" checked/>美食
+			<input type="checkbox" checked/>竞技
+			<input type="checkbox"/>社交
+			<input type="checkbox"/>旅行
+		</p>
+		<!-- 隐藏框
+			用来向服务器传递秘密的数据.
+			该数据通过value来设置,将来
+			学到EL表达式可以通过它设置动态的值. -->
+		<p>
+			<input type="hidden" value="hello"/>
+		</p>
+		<!-- 文件框 -->
+		<p>
+			头像:<input type="file"/>
+		</p>
+		<!-- 按钮 -->
+		<p>
+			<input type="submit" value="注册"/>
+			<input type="reset" value="重置"/>
+			<input type="button" value="测试"/>
+		</p>
+		
+		<!-- 2.2 其他元素(3):标签名不同 -->
+		<!-- label
+			用来管理表单中的文本,它可以将
+			文本与控件相绑定,从而增加控件
+			点击的范围,提高了易用性.
+			注意:任何元素都有id,id是元素的唯一标识. -->
+		<p>
+			<input type="checkbox" id="c1"/>
+			<label for="c1">我已阅读并自愿遵守此协议!</label>
+		</p>
+		<!-- 下拉选
+			selected:设置默认选中.
+			value:将来再讲. -->
+		<p>
+			城市:
+			<select>
+				<option>请选择</option>
+				<option>北京</option>
+				<option selected>上海</option>
+				<option>广州</option>
+				<option>深圳</option>
+			</select>
+		</p>
+		<!-- 文本域 -->
+		<p>
+			简介:
+			<textarea cols="50" rows="8"></textarea>
+		</p>
+	</form>
+</body>
+</html>
+
+
+
+
+
+
+
+

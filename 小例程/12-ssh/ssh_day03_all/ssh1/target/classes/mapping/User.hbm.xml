@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- User 类与 t_user 对应 -->
+	<class name="cn.tedu.entity.User"
+		table="t_user">
+		<!-- User的ID属性对应表的t_id列 -->
+		<id type="int" name="id" column="t_id"></id>
+		<!-- 映射普通属性 -->
+		<property name="name" column="t_name"/>
+		<property name="age" column="t_age"/>
+		<property name="address" 
+			column="t_address"/>
+	</class>
+</hibernate-mapping>
+
+

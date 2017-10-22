@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	//js代码有2种形式:
+	//1.将js封装为函数的形式,函数是在页面
+	//加载完成后,用户点击按钮时调用的.所以
+	//函数的调用时机是在页面加载后.
+	//2.直接在此处书写js,则这样的代码会在
+	//页面加载时立刻调用,其调用的时机甚至
+	//比body中的标签还早.
+	//alert("嘻嘻");
+	console.log("控制台打印");
+	
+	//1.声明变量
+	var x;
+	console.log(x);
+	x = 5;
+	console.log(x);
+	var y = 6;
+	console.log(y);
+	
+	//2.数据类型
+	//js中变量没有类型,但变量所引用的数据有类型
+	var s = "hello";
+	var n = 3.14;
+	var b = true;
+	
+	//3.隐式转换
+	console.log(s+n);
+	console.log(s+b);
+	console.log(n+b);
+	console.log(b+b);
+	
+	//4.强制转换
+	console.log(parseInt("6"));
+	console.log(parseInt(3.14));
+	console.log(parseInt("abc"));
+	console.log(parseInt(""));
+	
+	console.log(typeof(b));
+	
+	console.log(isNaN(6));
+	console.log(isNaN("6"));
+	console.log(isNaN("abc"));
+	console.log(isNaN(""));
+	
+	//5.运算符
+	var c = 6;
+	var d = "6";
+	console.log(c==d);
+	console.log(c===d);
+	
+	//6.条件表达式
+	//js允许我们以任意值做条件,其中
+	//非空的值相当于true,空值相当于false.
+	//空值:0,null,"",NaN,undefined
+	//这样做的目的是为了简化判断的逻辑.
+	var k = "";
+	if(k) {
+		console.log("ok");
+	}
+	var g = null;
+	g && console.log("hello");
+</script>
+</head>
+<body>
+	<p>此网页用来演示js基本语法</p>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

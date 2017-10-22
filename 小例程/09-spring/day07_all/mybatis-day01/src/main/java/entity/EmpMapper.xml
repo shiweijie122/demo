@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="test">
+	<!-- 
+		insert元素：插入操作。
+		id属性：要求唯一。
+		parameterType属性：参数类型，如果是类，
+				要写类的完整的名字。
+	 -->
+	<insert id="save" 
+		parameterType="entity.Employee">
+		INSERT INTO t_emp 
+		VALUES(t_emp_seq.nextval,
+		#{name},#{salary},#{age})
+	</insert>
+	
+</mapper>
+
+

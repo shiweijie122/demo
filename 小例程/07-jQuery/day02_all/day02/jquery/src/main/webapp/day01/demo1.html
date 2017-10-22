@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	function bigger() {
+		//获取段落原来的字号(16px)
+		var size = $("p").css("font-size");
+		//去掉单位(16)
+		size = size.replace("px","");
+		//字号+1,再设置给所有段落
+		$("p").css("font-size",++size+"px");
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="+"
+		onclick="bigger();"/>
+	<p>jQuery是轻量级的js框架</p>
+	<p>jQuery给我们提供了简洁而统一的API</p>
+	<p>jQuery对DOM操作提供了友好的支持</p>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<package name="post" namespace="/post" 
+		extends="json-default">
+		
+		<interceptors>
+			<interceptor name="demo" 
+				class="demoInterceptor"/>
+				
+			<interceptor-stack name="demoStack">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="demo"/>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="demo"/>
+		
+		<action name="list" method="list" 
+			class="postAction">
+			
+			<result name="json" type="json">
+				<param name="root">result</param>
+			</result>	
+		</action>	
+	</package>
+</struts>
+
+
+
+
+
+
+
+
+
+
+
+

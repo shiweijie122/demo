@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductGuidesMapper">
+	<!-- 查询指定产品的导游列表 -->
+	<select id="findGuidesListByProdId" parameterType="java.lang.Integer" resultType="map">
+		select 
+			id,
+			certificateNo,
+			name,
+			engName,
+			gender,
+			email,
+			language,
+			country,
+			contact,
+			note
+		from 
+			product_guidesinfo  pg,resource_guidesinfo rg
+		where 
+			pg.guideId = rg.id
+		and 
+			pg.prodId = #{prodId}
+	</select>
+	
+	<!-- 查看指定产品下某导游是否已经存在 -->
+	<select id="isExist" resultType="int">
+		select 
+			count(*)
+		from
+			product_guidesinfo
+		where
+			prodId = #{prodId}
+		and 
+			guideId = #{guideId}
+	</select>
+	
+	<!-- 保存产品导游信息 -->
+	<insert id="saveProductGuides" parameterType="cn.tedu.ttms.product.entity.ProductGuidesInfo">
+		insert into
+			product_guidesinfo(prodId,guideId,createdUser,createdTime,modifiedUser,modifiedTime)
+		values
+			(#{productGuidesInfo.prodId},#{productGuidesInfo.guideId},
+			#{productGuidesInfo.createdUser},NOW(),#{productGuidesInfo.modifiedUser},NOW())
+	</insert>
+	
+	<!-- 解除产品和导游的关系 -->
+	<delete id="deleteProductGuide">
+		delete from 
+			product_guidesinfo 
+		where
+			prodId = #{prodId}
+		and 
+			guideId = #{guideId}
+	</delete>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.sys.mapper.DictionaryMapper">
+	<!-- 查询字典类型 -->
+	<select id="selectDictType" resultType="cn.tedu.ttms.sys.entity.DictionaryType">
+		select dict_type_id as dictTypeId,dict_type_name as dictTypeName from tbl_dictionary_type
+		<where>
+			<if test="dictType!=null and dictType.dictTypeId!=null and dictType.dictTypeId!=''">
+				dict_type_id=#{dictType.dictTypeId}
+			</if>
+			<if test="dictType!=null and dictType.dictTypeName!=null and dictType.dictTypeName!=''">
+				and locate(#{dictType.dictTypeName},dict_type_name)>0
+			</if>
+    	</where>
+    	<if test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+          	LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+    	</if>
+	</select>
+	
+	<!-- 取得字典类型条数 -->
+	<select id="getDictTypeCount" resultType="java.lang.Integer">
+		select count(0) from tbl_dictionary_type 
+		<where>
+			<if test="dictType!=null and dictType.dictTypeId!=null and dictType.dictTypeId!=''">
+				dict_type_id=#{dictType.dictTypeId}
+			</if>
+			<if test="dictType!=null and dictType.dictTypeName!=null and dictType.dictTypeName!=''">
+				and locate(#{dictType.dictTypeName},dict_type_name)>0
+			</if>
+    	</where>
+	</select>
+	
+	<!-- 取得最大字典类型值 + 1 -->
+	<select id="getMaxDictTypeId" resultType="java.lang.String">
+		select IFNULL(lpad(max(dict_type_id)+1,3,'0'),'001') as dictTypeId from tbl_dictionary_type
+	</select>
+	
+	<!-- 新增字典类型 -->
+	<insert id="addDictType" parameterType="cn.tedu.ttms.sys.entity.DictionaryType">
+		insert into tbl_dictionary_type(dict_type_id,dict_type_name) 
+		values(
+		#{dictType.dictTypeId},
+		#{dictType.dictTypeName}
+		)
+	</insert>
+	
+	<!-- 更新字典类型 -->
+	<update id="updateDictType" parameterType="cn.tedu.ttms.sys.entity.DictionaryType">
+		update tbl_dictionary_type set dict_type_name=#{dictType.dictTypeName} where dict_type_id=#{dictType.dictTypeId}
+	</update>
+	
+	<!-- 删除字典类型 -->
+	<delete id="delDictType" parameterType="java.lang.String">
+		delete from tbl_dictionary_type where dict_type_id=#{dictTypeId}
+	</delete>
+	
+	<!-- 查询字典记录 -->
+	<select id="selectDictonary" resultType="cn.tedu.ttms.sys.entity.Dictionary">
+		select dict_id as dictId,dict_name as dictName,dict_value as dictValue,dict_type_id as dictTypeId from tbl_dictionary
+		<where>
+			<if test="dict!=null and dict.dictId!=null and dict.dictId!=''">
+				dict_id=#{dict.dictId}
+			</if>
+			<if test="dict!=null and dict.dictTypeId!=null and dict.dictTypeId!=''">
+				and dict_type_id=#{dict.dictTypeId}
+			</if>
+		</where>
+		<!-- <if test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+          LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+    	</if> -->
+	</select>
+	
+	<!-- 取得字典记录条数 -->
+	<select id="getDictionaryCount" resultType="java.lang.Integer">
+		select count(0) from tbl_dictionary
+		<where>
+			<if test="dict!=null and dict.dictId!=null and dict.dictId!=''">
+				dict_id=#{dict.dictId}
+			</if>
+			<if test="dict!=null and dict.dictTypeId!=null and dict.dictTypeId!=''">
+				and dict_type_id=#{dict.dictTypeId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 新增字典值 -->
+	<insert id="addDictionary" parameterType="cn.tedu.ttms.sys.entity.Dictionary">
+		insert into tbl_dictionary(dict_name,dict_value,dict_type_id) 
+		values(
+		#{dict.dictName},
+		#{dict.dictValue},
+		#{dict.dictTypeId}
+		)
+	</insert>
+	
+	<!-- 更新字典值 -->
+	<update id="updateDictionary" parameterType="cn.tedu.ttms.sys.entity.Dictionary">
+		update tbl_dictionary set 
+		dict_name=#{dict.dictName}, 
+		dict_value=#{dict.dictValue},
+		dict_type_id=#{dict.dictTypeId}
+		where dict_id=#{dict.dictId}
+	</update>
+	
+	<!-- 删除字典值 -->
+	<delete id="delDictionary" parameterType="cn.tedu.ttms.sys.entity.Dictionary">
+		delete from tbl_dictionary
+		<where>
+		<if test="dict!=null and dict.dictId!=null and dict.dictId!=''">
+			dict_id=#{dict.dictId}
+		</if>
+		<if test="dict!=null and dict.dictTypeId!=null and dict.dictTypeId!=''">
+			and dict_type_id=#{dict.dictTypeId}
+		</if>
+		</where>
+	</delete>
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.system.dao.OrganizationDao">
+    <!-- 查询项目信息 -->
+	<select id="findObjects" resultType="map">
+		SELECT
+		    id,
+		    name,
+		    code,
+		    parentId,
+		    parentIds,
+		    valid,
+		    note,
+		    createdUser,
+		    createdTime,
+		    modifiedUser,
+		    modifiedTime
+		    
+		FROM  sys_organizations o
+		
+	   <where>
+            <!-- 机构编号 -->
+			<if test="null ==entity.parentId">
+			AND o.parentId is null
+			</if>
+			 <!-- 机构名称 -->
+			<if test="entity.name!=null and entity.name!=''">
+			AND o.name like CONCAT('%',#{entity.name},'%')
+			</if>
+			 <!-- 状态 -->
+            <if test="null != entity.parentId ">
+            AND o.parentId = #{entity.parentId}
+            </if>
+			  <!-- 状态 -->
+            <if test="null != entity.valid">
+            AND o.valid = #{entity.valid}
+            </if>
+	   </where>
+	    ORDER BY  createdTime DESC 
+		<if test="pageObject!=null and pageObject.pageSize != 0">
+		LIMIT #{pageObject.startIndex},#{pageObject.pageSize}
+		</if>
+	</select>
+	<!-- 统计机构信息 -->
+	<select id="getRowCounts"  resultType="java.lang.Integer">
+		SELECT  count(*)
+		FROM    sys_organizations o
+	   <where>
+            <!-- 机构编号 -->
+			<if test="null ==entity.parentId">
+				AND o.parentId is null
+			</if>
+			 <!-- 机构名称 -->
+			<if test="entity.name!=null and entity.name!=''">
+				AND o.name like CONCAT('%',#{entity.name},'%')
+			</if>
+			 <!-- 状态 -->
+            <if test="null != entity.parentId ">
+                AND o.parentId = #{entity.parentId}
+            </if>
+			  <!-- 状态 -->
+            <if test="null != entity.valid ">
+                AND o.valid = #{entity.valid}
+            </if>
+	   </where>
+	</select>
+	<!--更新是否有效 -->
+	<update id="validById">
+		update sys_organizations set valid =#{valid},modifiedUser=#{user}, modifiedTime=NOW() where id=#{id}
+	</update>
+	<!-- 查找某个结构id下的所有子元素 -->
+	<select id="findObjectsByParentID"  resultType="java.lang.Integer">
+	    select id
+	    from sys_organizations o
+	    where parentId=#{id} and o.valid=1;
+	</select>
+	
+    <!-- 查找某个结构id下的所有子元素 -->
+	<select id="findObjectsByCode"  resultType="map">
+	    select o.id,o.name
+	    from sys_organizations o
+	    where  o.valid=1 and o.code=#{code};
+	</select>
+	
+	<!-- 保存数据 -->
+	<insert id="insertObject" parameterType="cn.tedu.ttms.system.entity.Organization" >
+		INSERT INTO sys_organizations
+		    (
+		    id,
+			name,
+			code,
+			parentId,
+			parentIds,
+			note,
+			createdUser,
+			createdTime,
+			modifiedUser,
+			modifiedTime)
+		VALUES
+		    (
+		    #{id},
+		    #{name},
+		    #{code},
+		    #{parentId},
+		    #{parentIds},
+		    #{note},
+		    #{createdUser},
+		    NOW(),
+		    #{modifiedUser},
+		    NOW())
+	</insert>
+	
+	<!--更新項目信息 -->
+	<update id="updateObject"  parameterType="cn.tedu.ttms.system.entity.Organization" >
+		update sys_organizations 
+		set 
+		name=#{name},
+		code = #{code},
+		modifiedUser=#{modifiedUser},
+		modifiedTime=NOW(),
+		note=#{note}
+		where id=#{id}
+	</update>
+	
+	<!-- 根據id查找項目信息 -->
+	<select id="findObjectById"   resultType="map">
+		SELECT
+		    o.id,
+		    o.name,
+		    o.code,
+		    o.note,
+		    o.valid,
+		    o.parentId,
+		    o.parentIds,
+		    o.createdUser,
+		    o.createdTime,
+		    o.modifiedUser,
+		    o.modifiedTime
+		FROM  sys_organizations  o
+		WHERE o.id=#{id}
+	</select>
+		
+	
+
+</mapper>

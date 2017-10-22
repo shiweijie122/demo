@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.ok {
+		color: green;
+	}
+	.error {
+		color: red;
+	}
+</style>
+<script>
+	//验证账号的格式
+	function checkCode() {
+		console.log(1);
+		//获取账号
+		var code = 
+			document.getElementById("code").value;
+		//获取span
+		var span = 
+			document.getElementById("code_msg");
+		//验证账号的格式
+		var reg = /^\w{5,10}$/;
+		if(reg.test(code)) {
+			span.className = "ok";
+			return true;
+		} else {
+			span.className = "error";
+			return false;
+		}
+	}
+	//验证密码的格式
+	function checkPwd() {
+		var pwd = 
+			document.getElementById("pwd").value;
+		var span = 
+			document.getElementById("pwd_msg");
+		var reg = /^\w{8,16}$/;
+		if(reg.test(pwd)) {
+			span.className = "ok";
+			return true;
+		} else {
+			span.className = "error";
+			return false;
+		}
+	}
+</script>
+</head>
+<body>
+	<form action="http://www.tmooc.cn"
+		onsubmit="return checkCode()+checkPwd()==2;">
+		<p>
+			账号:
+			<input type="text" 
+				onblur="checkCode();" id="code"/>
+			<span id="code_msg">5-10位字母、数字、下划线</span>
+		</p>
+		<p>
+			密码:
+			<input type="password" 
+				onblur="checkPwd();" id="pwd"/>
+			<span id="pwd_msg">8-16位字母、数字、下划线</span>
+		</p>
+		<p>
+			<input type="submit" value="登录"/>
+		</p>
+	</form>
+</body>
+</html>
+
+
+
+
+
+
+
+

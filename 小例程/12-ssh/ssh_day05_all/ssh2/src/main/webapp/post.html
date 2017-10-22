@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript"
+	src="jquery/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript">
+
+var SUCCESS = 1;
+
+$(function(){
+	//console.log("Hello");
+	loadPosts();
+});
+
+function loadPosts(){
+	var url = "post/list.action";
+	$.getJSON(url, function(result){
+		if(result.state==SUCCESS){
+			console.log(result);
+			var list=result.data;
+			showPosts(list);
+		}else{
+			alert(result.state);
+		}
+	});
+}
+
+function showPosts(list){
+	$('#post-list').empty();
+	var div = $('<div></div>');
+	for(var i=0; i<list.length; i++){
+		var post=list[i];
+		div.append('<h2>'+post.content+'</h2>')
+			.append('<p>'+post.user.name+' '+
+				post.time+'</p>')
+		.append(comments(post.comments));
+		$('#post-list').append(div);
+	}
+}
+
+function comments(list){
+	var ul = $('<ul></ul>');
+	for(var i=0; i<list.length; i++){
+		var comment = list[i];
+		ul.append('<li>'+comment.name+':'+
+				comment.content+'</li>');
+	}
+	return ul;
+}
+
+</script>
+</head>
+<body>
+	<h1>留言板</h1>
+	<div id="post-list">
+		<div>
+			<h2>内容</h2>
+			<p>name time</p>
+			<ul>
+				<li>name: 回复1</li>
+				<li>name: 回复1</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
+
+

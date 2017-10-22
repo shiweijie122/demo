@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.big {
+		width: 250px;
+		height: 250px;
+	}
+</style>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	$(function(){
+		//给按钮1绑定单击事件
+		$(":button:first").click(function(e){
+			console.log(1);
+			console.log(e);
+		});
+		//给图片绑定悬停事件
+		$("img").hover(
+			function(){
+				//width(250)
+				//css("width","250px")
+				//toggleClass("big")
+				$(this).addClass("big");
+			},
+			function(){
+				$(this).removeClass("big");
+			}
+		);
+		
+		//切换样式:让元素在显示与隐藏间切换.
+		setInterval(function(){
+			$("img").toggle();
+		},300);
+		
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" value="按钮1"/>
+	</p>
+	<p>
+		<img src="../images/01.jpg"/>
+		<img src="../images/02.jpg"/>
+		<img src="../images/03.jpg"/>
+	</p>
+</body>
+</html>
+
+
+
+
+
+
+

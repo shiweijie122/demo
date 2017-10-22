@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.user.mapper.MenuMapper">
+	<!-- 查询菜单 -->
+	<select id="selectMenu" resultType="cn.tedu.ttms.user.entity.Menu">
+		select menu_id as menuId,menu_name as menuName,link_url as linkUrl,icon,parent_menu as parentMenu,sort_level as sortLevel,menu_desc as menuDesc from tbl_menu
+		<where>
+			<if test="menu!=null and menu.menuId!=null and menu.menuId!=''">
+				menu_id=#{menu.menuId}
+			</if>
+    	</where>
+    	order by sort_level
+	</select>
+
+	<!-- 取得最大菜单编号 + 1 -->
+	<!-- <select id="getNextMenuId" resultType="java.lang.String">
+		select case when menu_id is null then '0001' else lpad(max(menu_id)+1,4,'0') end menuId from tbl_menu
+	</select> -->
+	
+	<!-- 新增菜单 -->
+	<insert id="addMenu" parameterType="cn.tedu.ttms.user.entity.Menu">
+		insert into tbl_menu(menu_id,menu_name,link_url,parent_menu,sort_level,menu_desc,icon) 
+		values(
+		(select tmp.menuId from (select IFNULL(lpad(max(menu_id)+1,4,'0'),'0001') as menuId from tbl_menu) tmp),
+		#{menu.menuName},
+		#{menu.linkUrl},
+		#{menu.parentMenu},
+		#{menu.sortLevel},
+		#{menu.menuDesc},
+		#{menu.icon}
+		)
+	</insert>
+	
+	<!-- 更新菜单 -->
+	<update id="updateMenu" parameterType="cn.tedu.ttms.user.entity.Menu">
+		update tbl_menu set 
+		menu_name=#{menu.menuName},
+		link_url=#{menu.linkUrl},
+		parent_menu=#{menu.parentMenu},
+		sort_level=#{menu.sortLevel},
+		menu_desc=#{menu.menuDesc},
+		icon=#{menu.icon}
+		where menu_id=#{menu.menuId}
+	</update>
+	
+	<!-- 删除菜单 -->
+	<delete id="delMenu" parameterType="cn.tedu.ttms.user.entity.Menu">
+		delete from tbl_menu
+		<where>
+			<if test="menu!=null and menu.menuId!=null and menu.menuId!=''">
+				menu_id=#{menu.menuId} or parent_menu=#{menu.menuId}
+			</if>
+			<if test="menu!=null and menu.parentMenu!=null and menu.parentMenu!=''">
+				and parent_menu=#{menu.parentMenu}
+			</if>
+		</where>
+	</delete>
+</mapper>

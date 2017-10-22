@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.sys.mapper.UserGroupMapper">
+	<select id="selectUserGroup" resultType="cn.tedu.ttms.sys.entity.UserGroup">
+    SELECT length(getParentList(gro.grpId))-length(replace(getParentList(gro.grpId),'_','')) as plevel,
+		SUBSTR(getParentList(gro.grpId),2) AS id,SUBSTR(LEFT(getParentList(gro.grpId),
+		LENGTH(getParentList(gro.grpId)) - LOCATE('_', REVERSE(getParentList(gro.grpId)))),2) AS pid,
+		gro.grpId,
+		gro.grpName,
+		gro.parentId,
+		gro.grpType,
+		gro.orgId,
+		(SELECT name FROM `res_companies` where compId=gro.orgId)as compname,
+		gro.note,
+		gro.valid,
+		gro.createdUser,
+		gro.createdTime,
+		gro.modifiedUser,
+		gro.modifiedTime,
+		para.`name` AS typeName
+		FROM aut_user_groups gro,sys_parameters para
+		<where>
+		  gro.grpType=para.`value` and para.category="groupType"
+		  <if test="userGroup!=null and userGroup.grpId!=null and userGroup.grpId!=''">
+		     AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE grpId = #{userGroup.grpId}),gro.grpId) > 0
+		   </if>
+		   <if test="userGroup!=null and userGroup.grpName!=null and userGroup.grpName!=''">
+		     AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE grpName like CONCAT('%',#{userGroup.grpName},'%')),gro.grpId) > 0
+
+		   </if>	
+		   <if test="userGroup!=null and userGroup.orgId!=null and userGroup.orgId!=''">
+			   AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE orgId like CONCAT('%',#{userGroup.orgId},'%')),gro.grpId) > 0
+		   </if>
+		    <if test="userGroup!=null and userGroup.grpType!=null and userGroup.grpType!=''">
+				AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE grpType = #{userGroup.grpType}),gro.grpId) > 0
+		   </if>
+		    <if test="userGroup!=null and userGroup.valid!=null and userGroup.valid!=''">
+				AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE valid = #{userGroup.valid}),gro.grpId) > 0
+		   </if>
+		   <if test="userGroup!=null and userGroup.note!=null and userGroup.note!=''">
+			   AND INSTR((SELECT GROUP_CONCAT(SUBSTR(getParentList(grpId),2)) FROM aut_user_groups WHERE note like CONCAT('%', #{userGroup.note},'%')),gro.grpId) > 0
+		   </if>			  
+		</where>
+		ORDER by SUBSTR(getParentList(gro.grpId),2) 
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="cn.tedu.ttms.sys.entity.UserGroup">
+        select grpId,grpName,parentId,grpType,(select grpName from aut_user_groups where grpId=#{parentId}) as parentName,
+              (select name from sys_parameters where category="groupType" and value=#{grpType}) as typeName,
+              (SELECT name FROM `res_companies` where compId=gro.orgId)as compname,orgId,note,valid,
+               createdUser,createdTime,modifiedUser,modifiedTime from aut_user_groups gro where grpId = #{grpId}
+    </select>
+    <select id="selectCompanies" resultType="cn.tedu.ttms.sys.entity.UserGroup">
+       SELECT compId ,`name` as compname FROM `res_companies`;
+    </select>
+	<!-- 取得数据条数 -->
+	<select id="GetRecordCount" resultType="java.lang.Integer">
+		select count(0) from aut_user_groups
+	</select>
+	<!-- 添加 -->
+    <insert id="addUserGroup" parameterType="cn.tedu.ttms.sys.entity.UserGroup">
+		insert into aut_user_groups(grpId,grpName,parentId,grpType,orgId,note,valid,createdUser,createdTime)
+		values(		
+		(select CONCAT('GRP',IFNULL(lpad(max(SUBSTR(grp.grpId,5,3))+1,4,'0'),'0001')) from aut_user_groups grp),#{userGroup.grpName},#{userGroup.parentId},
+		#{userGroup.grpType},#{userGroup.orgId},#{userGroup.note},#{userGroup.valid},#{userGroup.createdUser},NOW())
+	</insert>
+	<!-- 删除 -->
+	<delete id="deleteUserGroup" parameterType="java.lang.String">
+	 DELETE from aut_user_groups where  inStr(SUBSTR(getParentList(grpId),2),#{grpId}) > 0
+	  order by length(getParentList(grpId))-length(replace(getParentList(grpId),'_','')) desc				
+	</delete>
+	<!-- 保存 -->	
+	<update id="saveUserGroup" parameterType="cn.tedu.ttms.sys.entity.UserGroup">
+		update aut_user_groups
+    <set>
+      <if test="userGroup.grpName != null">
+        grpName = #{userGroup.grpName,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroup.parentId != null">
+        parentId = #{userGroup.parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroup.grpType != null">
+        grpType = #{userGroup.grpType,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroup.orgId != null">
+        orgId = #{userGroup.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroup.note != null">
+        note = #{userGroup.note,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroup.valid != null">
+        valid = #{userGroup.valid,jdbcType=TINYINT},
+      </if>
+      <if test="userGroup.createdUser != null">
+        createdUser = #{userGroup.createdUser,jdbcType=VARCHAR},
+      </if>     
+      <if test="userGroup.modifiedUser != null">
+        modifiedUser = #{userGroup.modifiedUser,jdbcType=VARCHAR},
+      </if>     
+       modifiedTime=NOW()      
+    </set>
+    where grpId = #{userGroup.grpId,jdbcType=VARCHAR}
+	</update>
+	<!-- 启用禁用签证   -->
+	<update id="updateUserGroup" parameterType="java.lang.String">
+		update aut_user_groups set 
+		  valid =#{valid},
+		  modifiedUser=#{updateUser},
+		  modifiedTime=NOW()
+		  where grpId=#{id}
+	</update>
+	<select id="selectGroup" resultType="cn.tedu.ttms.sys.entity.UserGroup">
+	   SELECT *, getParentList(grpId) as grpIds from aut_user_groups where aut_user_groups.parentId !='';
+	</select>
+	<select id="selectGroupNames" resultType="java.lang.String">
+	  SELECT GROUP_CONCAT(grpName SEPARATOR '/') FROM aut_user_groups where INSTR(#{grpIds},grpId)
+	</select>
+	
+	<select id="findGroupsLevel2" resultType="map">
+		SELECT 
+			sub.grpId, sub.parentId, sub.note, sub.grpName, par.grpName as "parentName"
+		FROM 
+			aut_user_groups as sub 
+		LEFT JOIN
+			aut_user_groups as par ON sub.parentId=par.grpId
+		WHERE 
+			sub.parentId!='' 
+	</select>
+	
+</mapper>

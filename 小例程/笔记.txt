@@ -1,0 +1,17 @@
+1. 集合框架  Collection
+ add()方法
+ contains方法
+ size,clear,isEmpty方法
+ 
+
+ addAll与containsAll方法
+ Iterator 迭代器
+ 	hasNext与next方法
+  	remove方法
+2. 集合操作——线性表
+ ArrayList和LinkedList
+ get与set方法
+   插入    void add(int index,E element): 
+   删除    E remove(int index):
+ subList方法
+ 

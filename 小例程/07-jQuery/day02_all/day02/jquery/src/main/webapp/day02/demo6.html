@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	#d1 {
+		width: 200px;
+		height: 200px;
+		background-color: red;
+		/*自定义动画基于定位*/
+		position: relative;
+	}
+</style>
+<script src="../js/jquery-1.11.1.js"></script>
+<script>
+	function f1() {
+		$("#d1").show(3000);
+	}
+	function f2() {
+		//参数2是一个函数,在动画完成时被调用.
+		//像这样在某事完成后,自动调用的函数,
+		//称之为回调函数.
+		$("#d1").hide(3000,function(){
+			console.log("finish");
+		});
+		//动画的原理:
+		//采用定时器,连续不断修改元素的样式.
+		//所以,调用该方法就启动了定时器,
+		//它相当于支线程,当前方法f2相当于
+		//主线程,二者并发执行.所以先输出over,
+		//3秒后才完成动画.
+		console.log("over");
+	}
+	$(function(){
+		//给div绑定悬停事件
+		$("#d1").hover(
+			function(){
+				$(this).animate({"left":"20px"},500);
+			},
+			function(){
+				$(this).animate({"left":0},500);
+			}
+		);
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" value="显示"
+			onclick="f1();"/>
+		<input type="button" value="隐藏"
+			onclick="f2();"/>
+	</p>
+	<div id="d1"></div>
+</body>
+</html>
+
+
+
+
+
+
+

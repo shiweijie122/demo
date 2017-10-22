@@ -1,0 +1,6 @@
+# Day01 知识点回顾
+1.旅游管理系统业务知识,架构分析?
+2.MySQL概述及基本应用?
+3.Data Source Explore (Eclipse 连接数据库)
+4.Eclipse 中的项目导入?
+5.旅游管理系统项目模块dao层实现. 

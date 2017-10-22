@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function f1() {
+		var b = confirm("您确定要删除数据吗?");
+		console.log(b);
+	}
+	function f2() {
+		//启动周期性定时器:
+		//每隔1000ms调用一次函数.
+		//该方法返回定时器的ID,
+		//此ID用来停止定时器.
+		var n = 5;
+		var id = setInterval(function(){
+			console.log(n--);
+			if(n==0) {
+				clearInterval(id);
+				console.log("DUANG");
+			}
+		},1000);
+		//启动定时器就好像启动了支线程,
+		//而当前方法f2好像是主线程.
+		//二者并发执行,即主线程在启动支线程
+		//后,并不会等待,立刻向下执行.
+		//所以立刻输出BOOM,1秒后才开始倒数.
+		console.log("BOOM");
+	}
+	var id;
+	function f3() {
+		//启动一次性定时器:
+		//在10秒后调用函数,然后自动停止.
+		id = setTimeout(function(){
+			console.log("滴滴滴");
+		},10000);
+	}
+	function f4() {
+		clearTimeout(id);
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="删除"
+		onclick="f1();"/>
+	<input type="button" value="倒数"
+		onclick="f2();"/>
+	<input type="button" value="计时器"
+		onclick="f3();"/>
+	<input type="button" value="取消"
+		onclick="f4();"/>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

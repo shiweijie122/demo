@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductClassMapper">
+	
+	<select id="findAllClass1" resultType="map">
+		SELECT
+			id,
+			className
+		FROM
+			product_class
+	    where 
+	    	parentId is null
+	    order by
+	    	id
+	</select>
+	
+	<select id="findAllClass2ByClass1" parameterType="int" resultType="map">
+    	SELECT
+			id,
+			className
+		FROM
+			product_class
+    	WHERE
+      		parentId = #{c1Id}
+    	ORDER BY
+      		id
+	</select>
+	
+	<select id="findAllClass3ByClass2" parameterType="int" resultType="map">
+    	SELECT
+			id,
+			className
+		FROM
+			product_class
+    	WHERE
+      		parentId = #{c2Id}
+    	ORDER BY
+      		id
+	</select>
+	
+	<select id="findClass1NameById" parameterType="int" resultType="map">
+		select 
+			pc1.id,
+			pc1.className 
+		from 
+			product_class pc1,product_class pc2
+		where 
+			pc1.id=pc2.parentId 
+		and 
+			pc2.id=#{c2Id}
+	</select>
+	
+	<select id="findClass2NameById" parameterType="int" resultType="map">
+		select
+			pc1.id,
+			pc1.className
+		from
+			product_class pc1,product_class pc2
+		where
+			pc1.id=pc2.parentId 
+		and 
+			pc2.id=#{c3Id}
+	</select>
+	
+	<select id="findClass3Name" parameterType="int" resultType="String">
+		select
+			className
+		from 
+			product_class
+		where 
+			id = #{c3Id}
+		
+	</select>
+	<!-- 根据一级分类id查询三级分类id -->
+	<select id="findClass3IdsByClass1Id" resultType="java.lang.Integer">
+		select
+			pc3.id
+		from 
+			product_class pc1,product_class pc2,product_class pc3 
+		where 
+			pc1.id=pc2.parentId 
+		and 
+			pc2.id = pc3.parentId 
+		and 
+			pc1.id=#{c1Id}
+	</select>
+	
+	<select id="findClass3IdsByClass2Id" resultType="java.lang.Integer">
+		select 
+			pc2.id
+		from 
+			product_class pc1,product_class pc2
+		where
+			pc1.id = pc2.parentId
+		and
+			pc1.id = #{c2Id}
+	</select>
+	
+	<!-- 保存产品分类 -->
+	<insert id="saveProductClass" parameterType="cn.tedu.ttms.product.entity.ProductClass">
+		insert into
+			product_class(className,parentId,createdUser,createdTime,modifiedUser,modifiedTime)
+		values
+			(#{productClass.className},#{productClass.parentId},#{productClass.createdUser},
+			NOW(),#{productClass.modifiedUser},NOW())
+			
+	</insert>
+	<!--根据id查询分类信息，用于编辑修改分类信息  -->
+	<select id="findClassInfoById" parameterType="java.lang.Integer" resultType="map">
+		select 
+			className
+		from
+			product_class
+		where
+			id=#{classId}
+	</select>
+	<!-- 修改产品分类信息 -->
+	<update id="updateProductClass" parameterType="cn.tedu.ttms.product.entity.ProductClass">
+		update
+			product_class
+		set
+			className = #{productClass.className},modifiedUser = #{productClass.modifiedUser},modifiedTime = NOW()
+		where
+			id=#{productClass.id}
+	</update>
+	
+	<!-- 根据一级分类id查询二级分类id -->
+	<select id="findClass2IdsByClass1Id" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select
+			id
+		from
+			product_class
+		where
+			parentId = #{c1Id}
+	</select>
+	<!-- 删除分类及其子分类 -->
+	<delete id="deleteClassList">
+		delete from 
+			product_class
+		where
+			id 
+		in
+			<foreach collection="classIdList" open="(" close=")" separator="," item="item">
+				#{item}
+			</foreach>
+	</delete>
+</mapper>

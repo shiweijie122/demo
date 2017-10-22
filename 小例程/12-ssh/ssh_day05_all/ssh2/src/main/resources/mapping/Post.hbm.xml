@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.tedu.entity.Post"
+	 	table="p_post"> 
+	 	<id name="id" column="p_id">
+	 		<!-- IdentityGenerator 简写 identity -->
+	 		<generator class="identity"/>
+	 	</id>
+	 	<property name="time" column="p_time"/>
+	 	<property name="content" column="p_content"/>
+		<!-- 多对一映射: 当前多个post对应一个User
+		其中 user 是属性名, user_id是列名
+		class是映射以后的类型 -->
+		<many-to-one name="user" 
+			class="cn.tedu.entity.User"
+			column="user_id"/>
+		<!-- set 集合映射 -->
+		<set name="comments" >
+			<key column="post_id"></key>
+			<one-to-many 
+				class="cn.tedu.entity.Comment"/>
+		</set>	
+		
+	</class>
+</hibernate-mapping>
+
+

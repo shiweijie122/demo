@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.project.mapper.ProjectMapper"> 
+    <!-- 查询项目信息 -->
+	<select id="findObjects" resultType="map">
+		SELECT
+			p.id,
+		    p.prjId,
+		    p.prjName,
+		    p.deptId,
+		    o.name,
+		    p.beginDate,
+		    p.endDate,
+		    p.valid,
+		    p.note,
+		    p.createdUser,
+		    p.createdTime,
+		    p.modifiedUser,
+		    p.modifiedTime
+		FROM
+		    product_projects  p join aut_organizations  o on  p.deptId=o.id
+		<where>
+		   1=1
+            <!-- 项目编号 -->
+			<if test="null != entity.prjId and  entity.prjId!=''">
+				AND p.prjId like CONCAT('%',#{entity.prjId},'%')
+			</if>
+            <!-- 项目名称 -->
+			<if test="null != entity.prjName and  entity.prjName!=''">
+				AND p.prjName like CONCAT('%',#{entity.prjName},'%')
+			</if>
+            <!-- 归属部门-->
+			<if test="null != entity.deptId and entity.deptId !=''">
+				AND p.deptId = #{entity.deptId}
+			</if>
+            <!-- 状态 -->
+            <if test="null != entity.valid and entity.valid!='' ">
+                AND p.valid = #{entity.valid}
+            </if>
+			<!-- 起始日期 -->
+            <if test="null != entity.beginDate and entity.beginDate!=''">
+				<![CDATA[
+				AND DATE_FORMAT(p.beginDate,'%Y-%m-%d') >= DATE_FORMAT(#{entity.beginDate},'%Y-%m-%d')
+				]]>
+			</if>
+			<!-- 结束日期 -->
+			<if test="null != entity.endDate and entity.endDate!=''">
+				<![CDATA[
+				AND DATE_FORMAT(p.endDate,'%Y-%m-%d') <= DATE_FORMAT(#{entity.endDate},'%Y-%m-%d')
+				]]>
+			</if>
+		
+		</where>
+		    ORDER BY  p.createdTime DESC 
+		<if test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+			LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+	</select>
+	
+	<!-- 取得项目信息数据总条数-->
+	<select id="getRowCounts" parameterType="cn.tedu.ttms.project.entity.Project" resultType="java.lang.Integer">
+		SELECT  count(*)
+		FROM    product_projects  p join aut_organizations o on  p.deptId=o.id
+		<where>
+		    1=1
+            <!-- 项目编号 -->
+			<if test="null != entity.prjId and  entity.prjId!=''">
+				AND p.prjId like CONCAT('%',#{entity.prjId},'%')
+			</if>
+            <!-- 项目名称 -->
+			<if test="null !=entity.prjName and  entity.prjName!=''">
+				AND p.prjName like CONCAT('%',#{entity.prjName},'%')
+			</if>
+            <!-- 归属部门-->
+			<if test="null != entity.deptId and entity.deptId !=''">
+				AND p.deptId = #{entity.deptId}
+			</if>
+            <!-- 状态 -->
+            <if test="null != entity.valid and entity.valid!='' ">
+                AND p.valid = #{entity.valid}
+            </if>
+			<!-- 起始日期 -->
+            <if test="null != entity.beginDate and entity.beginDate!=''">
+				<![CDATA[
+				AND DATE_FORMAT(p.beginDate,'%Y-%m-%d') >= DATE_FORMAT(#{entity.beginDate},'%Y-%m-%d')
+				]]>
+			</if>
+			<!-- 结束日期 -->
+			<if test="null != entity.endDate and entity.endDate!=null">
+				<![CDATA[
+				AND DATE_FORMAT(p.endDate,'%Y-%m-%d') <= DATE_FORMAT(#{entity.endDate},'%Y-%m-%d')
+				]]>
+			</if>
+		
+		</where>
+	</select>
+	
+	
+	<!--更新是否有效 -->
+	<update id="validById">
+		update product_projects set valid =#{valid},modifiedUser=#{user}, modifiedTime=NOW() where id=#{id}
+	</update>
+	
+	<!-- 删除项目信息(本模块删除是更新标志位） -->
+	<!--  <update id="deleteById">
+		update product_projects set isDelete =1,modifiedUser=#{user}, modifiedTime=NOW() where prjId=#{id}
+	</update> -->
+	
+	
+     <!--更新項目信息 -->
+	<update id="updateObject" parameterType="cn.tedu.ttms.project.entity.Project" >
+		update product_projects 
+		set 
+		prjId=#{prjId},
+		prjName = #{prjName},
+		deptId=#{deptId},
+		beginDate=#{beginDate},
+		endDate=#{endDate},
+		modifiedUser=#{modifiedUser},
+		modifiedTime=NOW(),
+		note=#{note}
+		where 
+			id = #{id}
+	</update>
+	
+	<!-- 添加 项目信息 -->
+	<insert id="insertObject" parameterType="cn.tedu.ttms.project.entity.Project" >
+		INSERT INTO product_projects
+		    (prjId,
+			prjName,
+			deptId,
+			beginDate,
+			endDate,
+			note,
+			createdUser,
+			createdTime,
+			modifiedUser,
+			modifiedTime)
+		VALUES
+		    (#{prjId},
+		    #{prjName},
+		    #{deptId},
+		    #{beginDate},
+		    #{endDate},
+		    #{note},
+		    #{createdUser},
+		    NOW(),
+		    #{modifiedUser},
+		    NOW())
+	</insert>
+	
+	<select id="findById"  parameterType="java.lang.String"  resultType="map">
+		SELECT
+		    p.prjId,
+		    p.prjName,
+		    p.deptId,
+		    o.name,
+		    p.beginDate,
+		    p.endDate,
+		    p.valid,
+		    p.note,
+		    p.createdUser,
+		    p.createdTime,
+		    p.modifiedUser,
+		    p.modifiedTime
+		FROM
+		    product_projects  p join aut_organizations  o on  p.deptId=o.id
+		WHERE
+		    p.id=#{id}
+		</select>
+		
+		<!-- 根据项目名称模糊查询项目id -->
+		<select id="findPrjIdsByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+			SELECT
+				id
+			FROM
+				product_projects
+			<where>
+				<if test="prjName!=null and prjName!=''">
+					prjName LIKE CONCAT('%',#{prjName},'%')
+				</if>
+			</where>
+		</select>
+		<!-- 获取项目列表，用于展示项目下拉列表 -->
+		<select id="projectList" resultType="map">
+			SELECT
+				id,
+				prjName
+			FROM
+				product_projects
+		</select>
+</mapper>

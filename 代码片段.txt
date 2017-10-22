@@ -1,0 +1,2000 @@
+----线程池的使用
+	public static void main(String[] args) {
+		ExecutorService threadPool
+			= Executors.newFixedThreadPool(2);
+	
+		for(int i=0;i<5;i++){
+			Runnable runn = new Runnable(){
+				public void run(){
+					try {
+						Thread t = Thread.currentThread();
+						System.out.println(
+							t.getName()+":正在运行任务...");
+						Thread.sleep(5000);
+						System.out.println(
+							t.getName()+":运行任务完毕...");
+					} catch (InterruptedException e) {
+						System.out.println("线程被中断了!");
+					}
+				}
+			};
+			/*
+			 * 将任务交给线程池去运行,如果线程池中
+			 * 有空闲线程,那么会立即分配线程来运行
+			 * 这个任务.若没有,则会加入线程池内部的
+			 * 队列,等待线程来运行.
+			 */
+			threadPool.execute(runn);
+			System.out.println("指派了一个任务...");
+		}
+		/*
+		 * shutdown()与shutdownNow()
+		 * shutdown():当线程池中所有任务运
+		 *            行完毕后停止
+		 *            
+		 * shutdownNow():强制将线程池中所有
+		 *               线程中断,并停止
+		 */
+		threadPool.shutdownNow();
+		System.out.println("线程池停止了.");
+		
+	}
+
+
+----DOM解析XML文档
+	public static void main(String[] args) {
+		/*
+		 * 使用DOM解析XML的大致步骤:
+		 * 1:创建SAXReader
+		 * 2:使用SAXReader读取XML文档并生成
+		 *   Document对象
+		 *   这一步就是DOM解析耗时好资源的地方
+		 *   因为要求先将XML文档所有内容读取
+		 *   完毕(耗时),并将内容加载到内存中以
+		 *   Document对象表示(耗资源)
+		 * 3:通过Document获取根元素
+		 * 4:根据文档结构从根元素开始逐级获取
+		 *   子元素,以达到遍历XML文档数据的目的
+		 */
+		try {
+			//1
+			SAXReader reader = new SAXReader();
+			//2
+			Document doc = reader.read(
+				new File("emplist.xml")
+			);
+			//3 获取根元素
+			Element root = doc.getRootElement();
+			/*
+			 * Element的每一个实例用于表示XML
+			 * 文档中的一个元素(一对标签)
+			 * Element提供了获取元素信息的相关
+			 * 方法:
+			 * String getName()
+			 * 获取元素的名字
+			 * 
+			 * Element element(String name)
+			 * 获取当前元素中指定名字的子元素
+			 * 
+			 * List elements()
+			 * 获取当前元素中所有子元素
+			 * 
+			 * List elements(String name)
+			 * 获取当前元素中所有同名子元素
+			 * 
+			 * String getText()
+			 * 获取当前元素中的文本信息
+			 * 
+			 * String elementText(String name)
+			 * 获取当前标签中指定名字子标签中间
+			 * 的文本信息
+			 * 
+			 * Attribute attribute(String name)
+			 * 获取当前元素中指定名字的属性
+			 * 
+			 * 
+			 */
+//			String name = root.getName();
+//			System.out.println(name);
+			
+			/*
+			 * 将<list>标签中的所有<emp>标签
+			 * 中的员工信息转换为若干Emp实例并
+			 * 存入集合
+			 */
+			List<Element> eleList = root.elements();
+			List<Emp> empList = new ArrayList<Emp>();
+			
+			for(Element empEle : eleList){
+				//获取name
+				Element nameEle = empEle.element("name");
+				String name = nameEle.getText();
+				System.out.println(name);
+				
+				//获取age
+				int age = Integer.parseInt(
+					empEle.elementText("age")
+				);
+				
+				String gender 
+					= empEle.elementText("gender");
+				
+				int salary = Integer.parseInt(
+					empEle.elementText("salary")	
+				);
+				//获取id属性
+				Attribute attr = empEle.attribute("id");
+//				attr.getName();//获取属性名
+				int id = Integer.parseInt(
+					attr.getValue()//获取属性值
+				);
+				
+				Emp emp = new Emp(id, name, age, gender, salary);
+				empList.add(emp);
+			}	
+			System.out.println("解析完毕!");
+			for(Emp e : empList){
+				System.out.println(e);
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+----使用DOM生成XML文档
+	public static void main(String[] args) {
+		List<Emp> empList 
+			= new ArrayList<Emp>();
+		
+		empList.add(new Emp(1,"张三",22,"男",5000));
+		empList.add(new Emp(2,"李四",23,"女",6000));
+		empList.add(new Emp(3,"王五",24,"男",7000));
+		empList.add(new Emp(4,"赵六",25,"女",8000));
+		empList.add(new Emp(5,"钱七",26,"男",9000));
+		
+		/*
+		 * 使用DOM生成XML文档的大致步骤
+		 * 1:创建Document对象
+		 * 2:向Document对象中添加根元素
+		 * 3:按照XML文档应有的结构从根元素
+		 *   开始逐级添加子元素
+		 * 4:创建XmlWriter
+		 * 5:通过XmlWriter将Document对象写出
+		 *   来形成XML文档
+		 * 6:关闭XmlWriter    
+		 */
+		try {
+			//1
+			Document doc = DocumentHelper.createDocument();
+			
+			/*
+			 * 2
+			 * Document提供添加根元素的方法
+			 * Element addElement(String name)
+			 * 添加指定名字的根元素.并将它以Element
+			 * 形式返回,以便继续对根元素操作.
+			 * 需要注意,该方法只能调用一次,因为一个
+			 * 文档中只能有一个根元素.
+			 */
+			Element root = doc.addElement("list");
+			
+			//3
+			for(Emp emp : empList){
+				//将每个Emp员工信息作为<emp>插入到根元素
+				/*
+				 * Element提供了用于追加信息的相关方法
+				 * 
+				 * Element addElement(String name)
+				 * 向当前元素中追加指定名字的子元素,并将其
+				 * 返回.
+				 * 
+				 * Element addText(String text)
+				 * 向当前元素中添加文本信息
+				 * 
+				 * Element addAttribute(String name,String value)
+				 * 向当前元素中追加指定名字及对应值的属性
+				 */
+				Element empEle = root.addElement("emp");
+				//添加<name>
+				Element nameEle = empEle.addElement("name");
+				nameEle.addText(emp.getName());
+				
+				Element ageEle = empEle.addElement("age");
+				ageEle.addText(emp.getAge()+"");
+				
+				Element genderEle = empEle.addElement("gender");
+				genderEle.addText(emp.getGender());
+				
+				Element salaryEle = empEle.addElement("salary");
+				salaryEle.addText(emp.getSalary()+"");
+				
+				empEle.addAttribute("id", emp.getId()+"");
+			}
+			
+			//4
+			FileOutputStream fos
+				= new FileOutputStream("myemp.xml");
+			XMLWriter writer = new XMLWriter(
+				fos,OutputFormat.createPrettyPrint()
+			);
+			
+			//5
+			writer.write(doc);
+			System.out.println("写出完毕!");
+			writer.close();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+
+	
+----使用XPath检索XML文档数据
+	public static void main(String[] args) {
+		try {
+			SAXReader reader = new SAXReader();
+			Document doc = reader.read(new File("myemp.xml"));
+					
+			String xPath 
+				= "/list/emp[salary>7000 and gender='女']/name";
+			List<Element> list 
+				= doc.selectNodes(xPath);
+			for(Element e : list){
+				System.out.println(e.getText());
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+----数据库
+  --	
+	创建表
+	CREATE TABLE employee_swj(
+	  id NUMBER(4),
+	  name VARCHAR2(20),
+	  gender CHAR(1),
+	  birth DATE,
+	  salary NUMBER(6,2),
+	  job VARCHAR2(30),
+	  deptno NUMBER(2)
+	)
+
+	查看表结构
+	DESC employee_swj
+
+	删除表：
+	DROP TABLE employee_shiweijie
+
+	数据库中所有数据类型的默认值都是NULL，
+	可是使用DEFAULT为指定字段单独定义默认值。
+
+	对于字符串的直接量，在数据库中是用单引号括起来的
+	并且字符串的值是区分大小写的！
+	CREATE TABLE employee_shiweijie(
+	  id NUMBER(4),
+	  name VARCHAR2(20),
+	  gender CHAR(1) DEFAULT'M',
+	  birth DATE,
+	  salary NUMBER(6,2),
+	  job VARCHAR(30) DEFAULT'CLERK',
+	  deptno NUMBER(2)
+	)
+
+	NOT NULL 定义的字段不能为空
+
+	CREATE TABLE employee_shiweijie(
+	  id NUMBER(4),
+	  name VARCHAR2(20) NOT NULL,
+	  gender CHAR(1) DEFAULT'M',
+	  birth DATE,
+	  salary NUMBER(6,2),
+	  job VARCHAR2(30) DEFAULT'CLERK',
+	  deptno  NUMBER(2)
+	)
+
+	修改表
+	1：修改表名
+	2：修改表结构
+
+	修改表名：
+	RENAME old_name TO nwe_name
+	将employee_shiweijie改名为myemp_shiwejie
+	RENAME employee_shiweijie TO myemp_shiweijie
+
+	修改表结构：
+	1：添加新字段
+	ALTER TABLE myemp_shiweijie ADD ( hiredate DATE )
+
+	2:修改现有字段
+	可以修改字段的类型，长度，添加默认值或NOT NULL 约束。
+	需要注意，尽量在表中没有数据的时候进行修改，
+	否则尽量不要修改类型，修改长度时尽量增加而不是减少，
+	否则可能由于已有数据不满足修改条件而导致修改字段失败。
+	ALTER TABLE myemp_shiweijie MODIFY ( job VARCHAR2(40) DEFAULT'CLERK' )
+
+	删除字段
+	ALTER TABLE myemp_shiweijie DROP ( hiredate )
+
+	DML 语句：数据操作语句
+	用于增删改表中数据，DML是伴随TCL（事物控制）
+
+	INSERT 语句
+	用于向表中插入新数据
+	INSERT INTO myemp_shiweijie (id,name,salary,deptno) VALUES (1,'jack',5000,10);
+	commit;
+
+	查询表
+	SELECT * FROM myemp_shiweijie
+
+	插入数据时忽略字段则是全列插入：
+	INSERT INTO myemp_shiweijie VALUES (2,'TOM','F',SYSDATE,5000,'CLERK',10)
+
+	插入日期类型数据时使用TO_DATE函数
+	INSERT INTO myemp_shiweijie (id,name,gender,birth,salary,job,deptno) VALUES (3,'史维杰','M',TO_DATE('1992-08-02','YYYY-MM-DD'),5000,'CLERK',10)
+
+	修改表中数据时通常要添加WHERE条件，这样只会将表中满足条件的记录进行修改，
+	若不添加条件则是表中所有记录都修改！
+
+	UPDATE 语句：修改表中数据
+	将TOM的工资改为8000
+	UPDATE myemp_shiweijie SET salary=8000,deptno=30 WHERE name='TOM'
+
+	删除数据的时候通常也要添加过滤条件来删除满足条件的记录，
+	不添加条件则是清空表操作（TRUNCATE TABLE myemp_shiweijie不能回滚，块删除，速度快）
+
+	DELETE 语句：删除表中数据
+	DELETE FROM myemp_shiweijie WHERE name='jack' 
+	
+	DQL必须包含两个子句，分别是
+	SELECT 子句：指定要查询的字段
+				可指定具体的字段，函数，表达式
+	FROM 子句：指定数据来源
+
+	SELECT empno,ename,job,sal FROM emp_shiweijie
+	SELECT ename,sal,sal*12 FROM emp_shiweijie
+
+  --
+	字符串函数
+	1：CONCAT(char1,char2)
+	连接char1与char2
+	SELECT CONCAT(ename,sal) FROM emp_shiweijie
+	SELECT CONCAT(CONCAT(ename,':'),sal) FROM emp_shiweijie
+	使用"||"也可以拼接字符串，更方便
+	SELECT ename||','||job||':'||sal FROM emp_shiweijie
+
+	2:LENGTH(CHAR)
+	返回指定字符串的长度
+	SELECT ename,LENGTH(ename) FROM emp_shiweijie
+	查看名字是5个字母的员工？
+	SELECT ename FROM emp_shiweijie WHERE LENGTH(ename)=5
+
+	dual:伪表，实际上不存在的表，当查询的内容与任何表中数据无关时，可以在FROM子句中使用伪表，伪表只会查询出一条记录
+
+	3：UPPER,LOWER,INITCAP
+	将给定字符串中的字母转换为全大写，全小写和首字母大写
+	INITCAP 中的字符串可以用空格分隔多个单词，那么每个单词首字母都会大写
+	SELECT UPPER('helloworld'),LOWER('HELLOWORLD'),INITCAP('HELLO WORLD') FROM dual
+
+	查看scott员工的信息？
+	SELECT ename,sal,job,deptno FROM emp_shiweijie WHERE ename=UPPER('scott')
+
+	4:TRIM,LERIM,RTRIM
+	去除字符串两端，左端，右端的指定字符
+	SELECT TRIM('e' FROM 'eeelisteee') FROM dual
+	SELECT LTRIM('eeelistee','e') FROM dual
+	SELECT RTRIM('eeelistee','e') FROM dual
+	SELECT LTRIM('asddadaddalistesa','asd') FROM dual
+
+	5:LPAD,RPAD
+	补位函数
+	LPAD(char1,n,char2)
+	将char1长度变为n位，若不足，则左面补充若干char2字符以达到该位数。超过则截取char1.
+	SELECT ename,LPAD(sal,6,'$') FROM emp_shiweijie
+	SELECT ename,LPAD(sal,6,' ') FROM emp_shiweijie
+	SELECT ename,LPAD(sal,3,'$') FROM emp_shiweijie
+
+	6:SUBSTR(char,m[,n])
+	截取char字符串，从m处开始，连续截取n个字符
+	n可以不指定，不指定则是截取到末尾，若n超过实际可截取长度，也是到末尾。数据库中下标都是从1开始的。
+	m可以是负数，若是负数则是从倒数位置开始截取
+	SELECT SUBSTR('thinking in java',10,2) FROM dual
+	SELECT SUBSTR('thinking in java',-7,2) FROM dual
+
+	7：INSTR(char1,char2,m,n)
+	查看char2在char1中的位置
+	m表示从第几个字符开始检索，n表示第几次出现，m，n都可以不指定，不指定则为1
+	SELECT INSTR('thinking in java','in',4,2) FROM dual
+
+	数值函数
+	1：ROUND(m[,n])
+	对m进行四舍五入，保留小数点后n位。
+	n为0或不指定则是保留到整数位，若为负数则是保留十位以上的数字
+	SELECT ROUND(45.678,2) FROM dual
+	SELECT ROUND(45.678,0) FROM dual
+	SELECT ROUND(45.678,-1) FROM dual
+
+	2:TRUNC函数：截取字符串
+	参数含义与ROUND一致
+	SELECT TRUNC(45.678,2) FROM dual
+
+	3:MOD(m,n):求余
+	若n为0则直接返回m
+	SELECT ename,sal,MOD(sal,1000) FROM emp_shiweijie
+
+	4:CEIL(n),FLOOR(n)
+	向上取整与向下取整
+	SELECT CEIL(45.678),FLOOR(45.678) FROM dual
+
+	日期相关关键字
+	SYSDATE,SYSTIMESTAMP
+	对应数据库内部函数，返回当前系统时间。
+	DATE默认只显示：DD-MON-RR
+	时间戳内容会多一些
+	SELECT SYSDATE FROM dual
+	SELECT SYSTIMESTAMP FROM dual
+
+	INSERT INTO emp_shiweijie (empno,ename,sal,job,deptno,hiredate) VALUES (1001,'JACK',2000,'CLERK',10,SYSDATE)
+	SELECT hiredate FROM emp_shiweijie
+
+	日期转换函数
+	1：TO_DATE()
+	将一个字符串按照指定的日期格式解析为DATE
+	日期格式字符串中除了字母，符号外的其他字符都要用双引号括起来。
+	SELECT TO_DATE('2008-08-08 20:08:08','YYYY-MM-DD HH24:MI:SS') FROM dual
+	SELECT TO_DATE('2008年08月08日','YYYY"年"MM"月"DD"日"') FROM dual
+
+	日期可以进行计算，两个日期相减，差为相差的天数。
+	对一个日期加减一个数字等于加减天数。
+	日期可以比较大小，最晚的越大
+
+	查看每个员工入职到今天一共多少天了？
+	SELECT ename,SYSDATE-hiredate FROM emp_shiweijie
+	到现在我活的天数
+	SELECT SYSDATE-TO_DATE('1992-08-02','YYYY-MM-DD') FROM DUAL
+
+	2:TO_CHAR():常用来将日期转换为字符串
+	SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS') FROM DUAL
+
+	RR,YY 在TO_DATE中将一个两位数字年解析为实际的日期时，判定实际的标准不同
+	YY按照当前系统时间世纪作为世纪解析，RR会自行判定。
+	SELECT TO_CHAR(TO_DATE('17-08-08','RR-MM-DD'),'YYYY-MM-DD') FROM DUAL
+	SELECT SYSDATE FROM DUAL
+
+	日期相关函数
+	1：LAST_DAY(date)
+	返回给定日期所在月的月底日期
+	SELECT LAST_DAY(SYSDATE) FROM DUAL
+
+	2：ADD_MONTHS(date,i)
+	对给定日期加减月
+	SELECT SYSDATE+1 FROM DUAL
+	SELECT ADD_MONTHS(SYSDATE,1) FROM DUAL
+
+	3:MONTHS_BETWEEN(date1,date2)
+	计算两个日期之间相差的月
+	SELECT ename,MONTHS_BETWEEN(SYSDATE,hiredate) FROM emp_shiweijie
+
+	4:NEXT_DAY(date,i)
+	返回给定日期第二天开始一周内指定周几对应的日期 (1为星期日，7为星期六)
+	SELECT NEXT_DAY(SYSDATE,5) FROM DUAL
+
+	5：LEAST,GREATEST
+	求最小值与最大值
+	不仅日期类型可用，其他可以比较大小的数据类型都可以使用这两个函数。
+	函数要求至少传入一个参数，所有参数数据类型要一致。
+	SELECT LEAST(SYSDATE,TO_DATE('2018-08-08','YYYY-MM-DD'),SYSDATE-1) FROM DUAL
+
+	6：EXTRACT() 获取一个日期中指定时间单位对应的值
+	SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL
+
+	查看1981年入职的员工？
+	SELECT ename,hiredate FROM emp_shiweijie WHERE EXTRACT(YEAR FROM hiredate)=1981
+
+	插入NULL值
+	CREATE TABLE student_shiweijie(
+	  id NUMBER(4),
+	  name CHAR(20),
+	  gender CHAR(1)
+	);
+	INSERT INTO student_shiweijie VALUES (1000,'李莫愁','F');
+	INSERT INTO student_shiweijie VALUES (1001,'林平之',NULL);
+	INSERT INTO student_shiweijie (id,name)VALUES (1002,'张无忌');
+	SELECT * FROM student_shiweijie
+	DELETE FROM student_shiweijie
+
+	2:更新NULL
+	将李莫愁性别改为NULL
+	UPDATE student_shiweijie SET gender=NULL WHERE name='李莫愁'
+
+	判断一个字段是否为空，不能用"="，而要用IS NULL和IS NOT NULL
+
+	3:删除性别为NULL的人
+	DELETE FROM student_shiweijie WHERE gender is null
+
+	NULL的运算
+	NULL与字符串连接等于什么也没做
+	NULL与数字运算结果还是NULL
+
+	空值函数
+	1：NVL(arg1,arg2)
+	将NULL值替换为非NULL值
+	当arg1为NULL时，函数返回arg2
+	当arg1不为NULL时，返回arg1
+	SELECT ename,sal,comm,sal+NVL(comm,0) FROM emp_shiweijie
+
+	查看每个员工的绩效情况。即：有绩效的显示为"有绩效",为NULL的则显示为"没有绩效"
+	2：NVL2(arg1,arg2,arg3)
+	当arg1不为NULL，函数返回arg2
+	当arg1为NULL，函数返回arg3
+	SELECT ename,comm,NVL2(comm,'有绩效','没有绩效') FROM emp_shiweijie
+
+  --
+	DQL必须包含两个子句，分别是
+	SELECT 子句：指定要查询的字段
+				可指定具体的字段，函数，表达式
+	FROM 子句：指定数据来源
+
+	SELECT empno,ename,job,sal FROM emp_shiweijie
+	SELECT ename,sal,sal*12 FROM emp_shiweijie
+
+	字符串函数
+	1：CONCAT(char1,char2)
+	连接char1与char2
+	SELECT CONCAT(ename,sal) FROM emp_shiweijie
+	SELECT CONCAT(CONCAT(ename,':'),sal) FROM emp_shiweijie
+	使用"||"也可以拼接字符串，更方便
+	SELECT ename||','||job||':'||sal FROM emp_shiweijie
+
+	2:LENGTH(CHAR)
+	返回指定字符串的长度
+	SELECT ename,LENGTH(ename) FROM emp_shiweijie
+	查看名字是5个字母的员工？
+	SELECT ename FROM emp_shiweijie WHERE LENGTH(ename)=5
+
+	dual:伪表，实际上不存在的表，当查询的内容与任何表中数据无关时，可以在FROM子句中使用伪表，伪表只会查询出一条记录
+
+	3：UPPER,LOWER,INITCAP
+	将给定字符串中的字母转换为全大写，全小写和首字母大写
+	INITCAP 中的字符串可以用空格分隔多个单词，那么每个单词首字母都会大写
+	SELECT UPPER('helloworld'),LOWER('HELLOWORLD'),INITCAP('HELLO WORLD') FROM dual
+
+	查看scott员工的信息？
+	SELECT ename,sal,job,deptno FROM emp_shiweijie WHERE ename=UPPER('scott')
+
+	4:TRIM,LERIM,RTRIM
+	去除字符串两端，左端，右端的指定字符
+	SELECT TRIM('e' FROM 'eeelisteee') FROM dual
+	SELECT LTRIM('eeelistee','e') FROM dual
+	SELECT RTRIM('eeelistee','e') FROM dual
+	SELECT LTRIM('asddadaddalistesa','asd') FROM dual
+
+	5:LPAD,RPAD
+	补位函数
+	LPAD(char1,n,char2)
+	将char1长度变为n位，若不足，则左面补充若干char2字符以达到该位数。超过则截取char1.
+	SELECT ename,LPAD(sal,6,'$') FROM emp_shiweijie
+	SELECT ename,LPAD(sal,6,' ') FROM emp_shiweijie
+	SELECT ename,LPAD(sal,3,'$') FROM emp_shiweijie
+
+	6:SUBSTR(char,m[,n])
+	截取char字符串，从m处开始，连续截取n个字符
+	n可以不指定，不指定则是截取到末尾，若n超过实际可截取长度，也是到末尾。数据库中下标都是从1开始的。
+	m可以是负数，若是负数则是从倒数位置开始截取
+	SELECT SUBSTR('thinking in java',10,2) FROM dual
+	SELECT SUBSTR('thinking in java',-7,2) FROM dual
+
+	7：INSTR(char1,char2,m,n)
+	查看char2在char1中的位置
+	m表示从第几个字符开始检索，n表示第几次出现，m，n都可以不指定，不指定则为1
+	SELECT INSTR('thinking in java','in',4,2) FROM dual
+
+	数值函数
+	1：ROUND(m[,n])
+	对m进行四舍五入，保留小数点后n位。
+	n为0或不指定则是保留到整数位，若为负数则是保留十位以上的数字
+	SELECT ROUND(45.678,2) FROM dual
+	SELECT ROUND(45.678,0) FROM dual
+	SELECT ROUND(45.678,-1) FROM dual
+
+	2:TRUNC函数：截取字符串
+	参数含义与ROUND一致
+	SELECT TRUNC(45.678,2) FROM dual
+
+	3:MOD(m,n):求余
+	若n为0则直接返回m
+	SELECT ename,sal,MOD(sal,1000) FROM emp_shiweijie
+
+	4:CEIL(n),FLOOR(n)
+	向上取整与向下取整
+	SELECT CEIL(45.678),FLOOR(45.678) FROM dual
+
+	日期相关关键字
+	SYSDATE,SYSTIMESTAMP
+	对应数据库内部函数，返回当前系统时间。
+	DATE默认只显示：DD-MON-RR
+	时间戳内容会多一些
+	SELECT SYSDATE FROM dual
+	SELECT SYSTIMESTAMP FROM dual
+
+	INSERT INTO emp_shiweijie (empno,ename,sal,job,deptno,hiredate) VALUES (1001,'JACK',2000,'CLERK',10,SYSDATE)
+	SELECT hiredate FROM emp_shiweijie
+
+	日期转换函数
+	1：TO_DATE()
+	将一个字符串按照指定的日期格式解析为DATE
+	日期格式字符串中除了字母，符号外的其他字符都要用双引号括起来。
+	SELECT TO_DATE('2008-08-08 20:08:08','YYYY-MM-DD HH24:MI:SS') FROM dual
+	SELECT TO_DATE('2008年08月08日','YYYY"年"MM"月"DD"日"') FROM dual
+
+	日期可以进行计算，两个日期相减，差为相差的天数。
+	对一个日期加减一个数字等于加减天数。
+	日期可以比较大小，最晚的越大
+
+	查看每个员工入职到今天一共多少天了？
+	SELECT ename,SYSDATE-hiredate FROM emp_shiweijie
+	到现在我活的天数
+	SELECT SYSDATE-TO_DATE('1992-08-02','YYYY-MM-DD') FROM DUAL
+
+	2:TO_CHAR():常用来将日期转换为字符串
+	SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS') FROM DUAL
+
+	RR,YY 在TO_DATE中将一个两位数字年解析为实际的日期时，判定实际的标准不同
+	YY按照当前系统时间世纪作为世纪解析，RR会自行判定。
+	SELECT TO_CHAR(TO_DATE('17-08-08','RR-MM-DD'),'YYYY-MM-DD') FROM DUAL
+	SELECT SYSDATE FROM DUAL
+
+	日期相关函数
+	1：LAST_DAY(date)
+	返回给定日期所在月的月底日期
+	SELECT LAST_DAY(SYSDATE) FROM DUAL
+
+	2：ADD_MONTHS(date,i)
+	对给定日期加减月
+	SELECT SYSDATE+1 FROM DUAL
+	SELECT ADD_MONTHS(SYSDATE,1) FROM DUAL
+
+	3:MONTHS_BETWEEN(date1,date2)
+	计算两个日期之间相差的月
+	SELECT ename,MONTHS_BETWEEN(SYSDATE,hiredate) FROM emp_shiweijie
+
+	4:NEXT_DAY(date,i)
+	返回给定日期第二天开始一周内指定周几对应的日期 (1为星期日，7为星期六)
+	SELECT NEXT_DAY(SYSDATE,5) FROM DUAL
+
+	5：LEAST,GREATEST
+	求最小值与最大值
+	不仅日期类型可用，其他可以比较大小的数据类型都可以使用这两个函数。
+	函数要求至少传入一个参数，所有参数数据类型要一致。
+	SELECT LEAST(SYSDATE,TO_DATE('2018-08-08','YYYY-MM-DD'),SYSDATE-1) FROM DUAL
+
+	6：EXTRACT() 获取一个日期中指定时间单位对应的值
+	SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL
+
+	查看1981年入职的员工？
+	SELECT ename,hiredate FROM emp_shiweijie WHERE EXTRACT(YEAR FROM hiredate)=1981
+
+	插入NULL值
+	CREATE TABLE student_shiweijie(
+	  id NUMBER(4),
+	  name CHAR(20),
+	  gender CHAR(1)
+	);
+	INSERT INTO student_shiweijie VALUES (1000,'李莫愁','F');
+	INSERT INTO student_shiweijie VALUES (1001,'林平之',NULL);
+	INSERT INTO student_shiweijie (id,name)VALUES (1002,'张无忌');
+	SELECT * FROM student_shiweijie
+	DELETE FROM student_shiweijie
+
+	2:更新NULL
+	将李莫愁性别改为NULL
+	UPDATE student_shiweijie SET gender=NULL WHERE name='李莫愁'
+
+	判断一个字段是否为空，不能用"="，而要用IS NULL和IS NOT NULL
+
+	3:删除性别为NULL的人
+	DELETE FROM student_shiweijie WHERE gender is null
+
+	NULL的运算
+	NULL与字符串连接等于什么也没做
+	NULL与数字运算结果还是NULL
+
+	空值函数
+	1：NVL(arg1,arg2)
+	将NULL值替换为非NULL值
+	当arg1为NULL时，函数返回arg2
+	当arg1不为NULL时，返回arg1
+	SELECT ename,sal,comm,sal+NVL(comm,0) FROM emp_shiweijie
+
+	查看每个员工的绩效情况。即：有绩效的显示为"有绩效",为NULL的则显示为"没有绩效"
+	2：NVL2(arg1,arg2,arg3)
+	当arg1不为NULL，函数返回arg2
+	当arg1为NULL，函数返回arg3
+	SELECT ename,comm,NVL2(comm,'有绩效','没有绩效') FROM emp_shiweijie
+	
+  --
+	子查询
+	子查询是一条查询语句，只是它是嵌套在其它SQL语句当中的，为外层SQL语句提供数据使用。
+
+	查看工资高于CLARK工资的员工？
+	select ename,sal 
+	from emp_shiweijie 
+	where sal>(select sal from emp_shiweijie where ename='CLARK') 
+
+	查看和BLAKE同职位的员工？
+	select ename,job 
+	from emp_shiweijie 
+	where ename<>'BLAKE' and job=(select job from emp_shiweijie where ename='BLAKE') 
+
+	查看工资高于公司平均工资的员工？
+	select ename,sal from emp_shiweijie where sal>(select AVG(sal) from emp_shiweijie)
+
+	查看公司最高工资员工的信息？
+	select ename,sal,job,deptno
+	from emp_shiweijie
+	where sal=(select max(sal) from emp_shiweijie )
+
+	DDL,DML中也可以使用子查询
+	DDL中使用子查询，可以将子查询的结果集当做一张表快速创建出来
+	create table employee_shiweijie
+	as
+	select e.empno,e.ename,e.job,e.sal,d.deptno,d.dname,d.loc
+	from emp_shiweijie e full outer join dept_shiweijie d
+	on e.deptno=d.deptno
+
+	DML中使用子查询
+	将SMITH所在部门所有员工工资上浮10%
+	update emp_shiweijie
+	set sal=sal*1.1
+	where deptno=(select deptno from emp_shiweijie where ename='SMITH')
+
+	子查询根据查询结果集分为：
+	单行单列，多行单列，多行多列子查询
+	其中单列的子查询常用在过滤条件中，
+	而多列子查询通常当做一张表使用。
+
+	对于多行单列子查询用在过滤条件中
+	作为判断是要配合in,any,all去使用
+
+	查看与职位是SALESMAN同部门的其他职位员工？
+	select ename,job,deptno
+	from emp_shiweijie
+	where deptno in(select deptno from emp_shiweijie where job='SALESMAN') and job<>'SALESMAN'
+
+	查看比职位是CKERK和SALESMAN工资都高的员工？
+	select ename,job,deptno
+	from emp_shiweijie
+	where sal>all(select sal from emp_shiweijie where job in('CLERK','SALESMAN'))
+
+	exists关键字
+	exists后面跟子查询，只要子查询可以查询出至少一条记录，exists则为真。
+	not exists 则是相反判断
+
+	查看有员工的部门？
+	select deptno,dname 
+	from dept_shiweijie d
+	where exists(select * from emp_shiweijie e where d.deptno=e.deptno)
+
+	查看谁是领导？
+	select m.empno,m.ename,m.job
+	from emp_shiweijie m
+	where exists(select * from emp_shiweijie e where e.mgr=m.empno)
+
+	查询列出最低薪水高于部门30的最低薪水的部门信息？
+	select min(sal),deptno
+	from emp_shiweijie
+	group by deptno
+	having min(sal)>(select min(sal) from emp_shiweijie where deptno=30)
+
+	查看高于自己所在部门平均工资的员工？
+	select ename,sal,e.deptno,avg_sal
+	from emp_shiweijie e,(select avg(sal) avg_sal,deptno from emp_shiweijie group by deptno) t
+	where e.deptno=t.deptno and sal>avg_sal
+
+	select e.ename,e.sal,(select d.deptno from dept_shiweijie d where d.deptno=e.deptno) deptno
+	from emp_shiweijie e
+
+
+	分页查询
+	分页查询就是分段查询数据，当一个查询语句可以查询出大量数据时，通常就要用分页方式进行查询，
+	因为数据量大会导致系统响应速度变慢，资源消耗大，且大部分情况下也不需要那么大量的数据。
+	分页查询不同的数据库都有提供实现，但是由于标准SQL中没有语法规定，所有分页语句是方言。
+
+	Oracle中使用rownum作为分页的机制
+	rownum是一个伪列，它不存在于任何表中，但是每张表都可以查询该字段，而该字段的值是伴随查询的过程中动态生成的，
+	即：每当可以从表中查询出一条记录，那么rownum字段就会为该行记录编行号，从1开始逐行递增
+
+	查询第6到10行的记录
+	select *
+	from (select rownum rn,empno,ename,job from emp_shiweijie)
+	where rn between 6 and 10
+
+	查看工资排名的6-10
+	select *
+	from(select rownum rn,e.* from (select empno,ename,job,sal from emp_shiweijie order by sal desc) e where rownum<=10 )
+	where rn>=6
+
+	范围公式：
+	pageSize:每页显示的条目数
+	page：页数
+
+	start=(page-1)*pageSize+1
+	end=pageSize*page
+	
+	mySQL的分页查询
+	从第>0行开始，查询5行
+	select * from emp_shiweijie where id limit 0,5;
+	
+	起始行：(page-1)*pageSize
+	每页行数：pageSize
+
+	给不同职位的员工分别涨工资？
+	select ename,job,sal,
+		   decode(job,
+				  'MANAGER',sal*1.2,
+				  'ANALYST',sal*1.1,
+				  'SALESMAN',sal*1.05,
+				  sal ) bonus
+	from emp_shiweijie
+
+	select ename,job,sal,
+		   case job when 'MANAGER' then sal*1.2
+					when 'ANALYST' then sal*1.1
+					when 'SALESMAN' then sal*1.05
+					else sal end
+		   bonus
+	from emp_shiweijie       
+
+	统计人数，将MANAGER,ANALYST看做一组，其他职位员工看做另一组，分别统计人数？
+	select count(*),
+		   decode(job,
+				  'MANAGER','VIP',
+				  'ANALYST','VIP',
+				  'OTHER')
+	from emp_shiweijie
+	group by decode(job,
+				  'MANAGER','VIP',
+				  'ANALYST','VIP',
+				  'OTHER')
+				  
+	decode在分组查询中的应用
+	select deptno,dname,loc
+	from dept_shiweijie
+	order by decode(dname,'OPERATIONS',1,'ACCOUNTING',2,'SALES',3)
+
+	排序函数
+	排序函数可以对结果集按照指定字段分组，然后组内按照指定字段排序，
+	并为每组的每条记录编行号。
+
+	row_number():生成组内连续且唯一的数字
+	查看每个部门的工资排名：
+	select ename,sal,deptno,
+		   row_number() over(
+		   partition by deptno
+		   order by sal desc
+		   ) rank
+	from emp_shiweijie 
+
+	rank():生成组内不连续也不唯一的数字
+	select ename,sal,deptno,
+		   rank() over(
+		   partition by deptno
+		   order by sal desc
+		   ) rank
+	from emp_shiweijie
+
+	dense_rank:生成组内连续但不唯一的数字
+	select ename,sal,deptno,
+		   dense_rank() over(
+		   partition by deptno
+		   order by sal desc
+		   ) rank
+	from emp_shiweijie
+
+
+	集合操作
+
+	union操作符会自动去掉合并后的重复记录
+	select ename,job,sal from emp_shiweijie where job='MANAGER'
+	union
+	select ename,job,sal from emp_shiweijie where sal>2500;
+
+	union all返回两个结果集中的所有行，包括重复的行
+	select ename,job,sal from emp_shiweijie where job='MANAGER'
+	union all
+	select ename,job,sal from emp_shiweijie where sal>2500
+
+	intersect:函数获得两个结果集的交集，只有同时存在于两个结果集中的数据，才被显示输出.使用intersect操作符后的结果集会以第一列的数据作升序排列。
+	select ename,job,sal from emp_shiweijie where job='MANAGER'
+	intersect
+	select ename,job,sal from emp_shiweijie where sal>2500
+
+	minus函数获取两个结果集的差集。只有在第一个结果集中存在，在第二个结果集中不存在的数据，才能够被显示出来。也就是结果集一减去结果集二的结果
+	select ename,job,sal from emp_shiweijie where job='MANAGER'
+	minus
+	select ename,job,sal from emp_shiweijie where sal>2500
+
+
+	插入一千条数据
+	create table sales_shiweijie(
+	year_id number not null,
+	month_id number not null,
+	day_id number not null,
+	sales_value number(10,2) not null
+	);
+	insert into sales_shiweijie
+	select trunc(dbms_random.value(2010,2012)) as year_id,
+		   trunc(dbms_random.value(1,13)) as month_id,
+		   trunc(dbms_random.value(1,32)) as day_id,
+		   round(dbms_random.value(1,100),2) as sales_value
+	from dual
+	connect by level <=1000;
+
+	高级分组函数：
+	1：rollup()
+	group by rollup(a,b,c)
+	等同于
+	group by a,b,c
+	union all
+	group by a,b
+	union all
+	group by a
+	union all
+	全表
+
+	select year_id,month_id,day_id,sum(sales_value)
+	from sales_shiweijie
+	group by
+	  rollup(year_id,month_id,day_id)
+	order by year_id,month_id,day_id
+
+	2:cube()
+	每个参数的组合分别进行一次分组，然后将所有
+	select year_id,month_id,day_id,sum(sales_value)
+	from sales_shiweijie
+	group by
+	  cube(year_id,month_id,day_id)
+	order by year_id,month_id,day_id
+
+	3:grouping sets
+	每个参数为一种分组方式，然后将这些分组统计的结果并在一个结果集中
+
+	查看每天与每月的结果集中
+	select year_id,month_id,sum(sales_value)
+	from sales_shiweijie
+	group by 
+	   grouping sets((year_id,month_id),(year_id))
+	order by year_id,month_id
+	
+ --
+	视图
+	视图也是数据库对象之一
+	视图又称虚表，即：当做表用，但并非一张真实存在的表。视图仅对应的是一个查询语句的结果集。
+
+	create view v_emp_shiweijie_10
+	as
+	select empno,ename,job,sal,deptno
+	from emp_shiweijie
+	where deptno=10
+
+	视图对应的子查询中select子句里指定的字段如果含有函数或者表达式，
+	那么必须为这个字段添加别名。
+	create or replace view v_emp_shiweijie_10
+	as
+	select empno id,ename name,job,sal,deptno
+	from emp_shiweijie
+	where deptno=10
+
+	视图根据对应的子查询分为：
+	简单视图与复杂视图
+	简单视图：对应的子查询不包含函数，表达式，分组，去重，关联查询等操作
+
+	复杂视图：对应的子查询中包含函数，表达式，分组，去重，关联查询等操作
+	其中含有关联查询的视图也称为：连接视图
+
+	简单视图可以进行DML操作，但是复杂视图不允许进行DML操作。
+
+	对视图进行DML操作就是对视图数据来源的基础表进行的操作
+	insert into v_emp_shiweijie_10 (id,name,job,sal,deptno) values (1001,'JACK','CLERK',3000,10)
+
+	select * from v_emp_shiweijie_10;
+	select * from emp_shiweijie
+
+	update v_emp_shiweijie_10
+	set sal=4000
+	where id=1001
+
+	delete from v_emp_shiweijie_10
+	where id=1001
+
+	对视图进行不当的DML操作，会污染基础表数据。即：通过视图对基础表操作后的记录视图对其并不可见（不可控）
+	insert into v_emp_shiweijie_10 (id,name,job,sal,deptno) values (1001,'JACK','CLERK',3000,20)
+
+	update v_emp_shiweijie_10
+	set deptno=20
+
+	delete 操作不存在污染情况
+	delete from v_emp_shiweijie_10
+	where deptno=20
+
+	为视图添加检查选项，可以避免对基表产生污染。
+	检查选项要求对视图进行DML操作后视图必须对该记录可见
+	create or replace view v_emp_shiweijie_10
+	as
+	select empno id,ename name,job,sal,deptno
+	from emp_shiweijie
+	where deptno=10
+	with check option
+
+	insert into v_emp_shiweijie_10 (id,name,job,sal,deptno) values (1001,'JACK','CLERK',3000,20)
+
+	update v_emp_shiweijie_10 set deptno=20
+
+	为视图添加只读选项，那么视图不允许进行DML操作
+	create or replace view v_emp_shiweijie_10
+	as
+	select empno id,ename name,job,sal,deptno
+	from emp_shiweijie
+	where deptno=10
+	with read only
+
+	insert into v_emp_shiweijie_10 (id,name,job,sal,deptno) values (1001,'JACK','CLERK',3000,20)
+
+
+	常用数据字典：
+	select object_name,object_type 
+	from user_objects
+	where object_name like '%SHIWEIJIE'
+
+	select view_name,text from user_views where view_name like '%SHIWEIJIE'
+
+	select table_name from user_tables where table_name like '%SHIWEIJIE'
+
+
+	复杂视图：创建一个部门工资信息的视图
+	部门编号，名称，所在地，最高，最低，平均，工资总和
+	create or replace view v_emp_shiweijie_all
+	as
+	select d.deptno,d.dname,d.loc,max(e.sal) max_sal,min(e.sal) min_sal,avg(e.sal) avg_sal,sum(e.sal) sum_sal
+	from emp_shiweijie e join dept_shiweijie d on e.deptno=d.deptno
+	group by d.deptno,d.dname,d.loc
+
+	select * from v_emp_shiweijie_all
+
+	查看谁高于自己所在部门的平均工资？
+	select e.ename,e.sal,e.deptno
+	from emp_shiweijie e join v_emp_shiweijie_all ve on e.deptno=ve.deptno
+	and e.sal>avg_sal
+
+	删除视图：
+	drop view v_emp_shiweijie_all
+	删除视图本身并不会影响基表数据
+
+
+
+
+	序列
+	序列也是数据库对象之一
+	作用是生成一系列数字，一般用作为某张表的主键字段提供值
+	create sequence seq_emp_shiweijie_id
+	start with 1
+	increment by 1
+
+	序列支持两个伪列，用于获取序列的数字
+	nextval:获取序列的下一个数字，调用该伪列会导致序列发生步进，且序列是不能回退的。
+
+	currval:获取序列当前数字(最后通过nextval生成的数字）。
+			需要注意，新一次创建的序列至少要执行一次nextval后才可以使用currval
+
+	select seq_emp_shiweijie_id.nextval from dual
+
+	select seq_emp_shiweijie_id.currval from dual
+
+	insert into emp_shiweijie (empno,ename,job,sal,deptno) values (seq_emp_shiweijie_id.nextval,'JACK','CLERK',3000,10)
+	select * from emp_shiweijie
+
+	删除序列
+	drop sequence seq_emp_shiweijie_id
+
+
+	uuid:另一种主键机制
+	32位不重复主键
+	select sys_guid() from dual
+
+
+	索引
+	索引是数据库对象之一
+	索引是为了提高查询效率的一种机制
+	经常出现在过滤条件中个的字段，或者排序中的字段，去重的字段，就可以为其添加一个索引以提高查询的效率。
+	索引的实际创建和使用是数据库自行完成的
+
+	在emp_shiweijie表的ename列上建立索引
+	create index idx_emp_shiweijie_ename on emp_shiweijie(ename)
+	select * from emp_shiweijie
+
+	当ename经常出现在where中，或者排序或者去重时就可以为其添加这样的索引，
+	使用的时候数据库就会自行应用，无需再select中体现索引：
+	select * from emp_shiweijie where ename='SMITH'
+	上面的查询就会应用索引了
+
+	模糊查询like是不会应用索引的
+
+	创建复合索引
+	create index idx_emp_shiweijie_job_sal on emp_shiweijie(job,sal)
+
+	select * from emp_shiweijie order by job,sal
+
+	创建基于函数的索引
+	create index emp_shiweijie_ename_upper_idx on emp_shiweijie(upper(ename))
+
+	select * from emp_shiweijie where upper(ename)='KING'
+
+	修改和删除索引
+	alter index idx_emp_shiweijie_ename rebuild
+
+	drop index idx_emp_shiweijie_ename 
+
+	为提升查询效率，创建和使用索引的原则：
+	为经常出现在WHERE子句中的列创建索引
+	为经常出现在ORDER BY、DISTINCT后面的字段建立索引。如果建立的是复合索引，索引的字段顺序要和这些关键字后面的字段顺序一致
+	为经常作为表的连接条件的列上创建索引
+	不要在经常做DML操作的表上建立索引
+	不要在小表上建立索引
+	限制表上的索引数目，索引并不是越多越好
+	删除很少被使用的、不合理的索引
+
+
+	约束
+	非空约束
+	建表是添加非空约束
+	create table employees_shiweijie(
+	eid number(6),
+	name varchar2(30) not null,
+	salary number(7,2),
+	hiredate date constraint emp_shiweijie_hiredate_nn not null
+	)
+
+	修改表时添加非空约束
+	alter table employees_shiweijie modify (eid number(6) not null)
+
+	取消非空约束
+	alter table employees_shiweijie modify (eid number(6) null)
+
+	desc employees_shiweijie
+
+
+	唯一性约束
+	唯一性约束要求该字段的值每条记录都不允许重复，null除外
+	create table employees1_shiweijie(
+	eid number(6) unique,
+	name varchar2(30),
+	email varchar2(50),
+	salary number(7,2),
+	hiredate date,
+	constraint emp_shiweijie_email_uk unique(email)
+	);
+
+	insert into employees1_shiweijie (eid,name,email) values (1,'JACK','JACK@163.COM')
+	insert into employees1_shiweijie (eid,name,email) values (NULL,'JACK',NULL)
+
+	添加唯一性约束
+	alter table employees1_shiweijie add constraint emp_shiweijie_name_uk unique(name); 
+
+
+	主键约束
+	create table emp2_shiweijie(
+	eid number(6) primary key,
+	name varchar2(30),
+	email varchar2(50),
+	salary number(7,2),
+	hiredate date
+	)
+
+	insert into employees2_shiweijie (eid,name,salary) values (1,'JACK',)
+
+	检查约束
+	alter table employees2_shiweijie add constraint emp2_shiweijie_salary_check check(salary>2000)
+
+	desc emp2_shiweijie
+	select * from employees1_shiweijie
+	delete employees1_shiweijie  
+
+
+
+----直接连接数据库
+	public void test1() {
+		System.out.println(1);
+		Connection conn = null;
+		try {
+			//注册驱动,告诉DriverManager用这个类
+			Class.forName(
+				"oracle.jdbc.driver.OracleDriver");
+			//创建连接
+			conn = DriverManager.getConnection(
+				"jdbc:oracle:thin:@192.168.204.10:1521:orcl", "openlab", "open123");
+			System.out.println(conn);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+----JDBC连接数据库,DBTool工具
+util包中的DBTool代码：
+	public class DBTool {
+	
+		private static String url;
+		private static String user;
+		private static String pwd;
+		
+		static {
+			Properties p = new Properties();
+			try {
+				//加载配置文件
+				p.load(DBTool.class.getClassLoader()
+					.getResourceAsStream("db.properties"));
+				String driver = p.getProperty("driver");
+				url = p.getProperty("url");
+				user = p.getProperty("user");
+				pwd = p.getProperty("pwd");
+				//注册驱动
+				Class.forName(driver);
+			} catch (IOException e) {
+				//异常的处理原则:
+				//1.记录日志
+				e.printStackTrace();
+				//2.能处理则处理,具体参考开发规范
+				//3.不能处理则抛出
+				throw new RuntimeException(
+					"加载db.properties失败!",e);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				throw new RuntimeException(
+					"找不到驱动类!",e);
+			}
+		}
+
+		public static Connection getConnection() 
+			throws SQLException {
+			return DriverManager
+				.getConnection(url, user, pwd);
+		}
+		
+		public static void close(Connection conn) {
+			try {
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(
+					"关闭连接失败!",e);
+			}
+		}
+		
+	}
+配置文件：db.properties
+	# db connection parameters
+	driver=oracle.jdbc.driver.OracleDriver
+	url=jdbc:oracle:thin:@192.168.204.10:1521:orcl
+	user=openlab
+	pwd=open123
+	# db connection parameters
+	#driver=com.mysql.jdbc.Driver
+	#url=jdbc:mysql://localhost:3306/mysql?useSSL=false
+	#user=root
+	#pwd=123456
+	
+	
+----JDBC连接数据库,dbcp连接池工具DBUtil类
+util包中的DBUtil代码：
+	public class DBUtil {
+	
+		private static BasicDataSource ds;
+
+		static {
+			//加载参数
+			Properties p = new Properties();
+			try {
+				p.load(DBUtil.class.getClassLoader()
+				 .getResourceAsStream("db.properties"));
+				String driver = p.getProperty("driver");
+				String url = p.getProperty("url");
+				String user = p.getProperty("user");
+				String pwd = p.getProperty("pwd");
+				String initsize = p.getProperty("initsize");
+				String maxsize = p.getProperty("maxsize");
+				//创建连接池
+				ds = new BasicDataSource();
+				//设置参数
+				ds.setDriverClassName(driver);
+				ds.setUrl(url);
+				ds.setUsername(user);
+				ds.setPassword(pwd);
+				ds.setInitialSize(
+					Integer.parseInt(initsize));
+				ds.setMaxActive(
+					Integer.parseInt(maxsize));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(
+					"加载db.properties失败!",e);
+			}
+		}
+		
+		public static Connection getConnection() 
+			throws SQLException {
+			return ds.getConnection();
+		}
+		
+		/**
+		 * 目前连接是由连接池创建的,
+		 * 连接的实现类是由连接池提供的,
+		 * 连接池将连接对象的close方法
+		 * 改为归还连接的逻辑.
+		 */
+		public static void close(Connection conn) {
+			try {
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(
+					"关闭连接失败!",e);
+			}
+		}
+		public static void rollback(Connection conn){
+			if(conn!=null){
+				try {
+					conn.rollback();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new RuntimeException("回滚失败！",e);
+				}
+			}
+		}
+	}
+
+配置文件：db
+	# db connection parameters
+	driver=oracle.jdbc.driver.OracleDriver
+	url=jdbc:oracle:thin:@192.168.204.10:1521:orcl
+	user=openlab
+	pwd=open123
+	# datasource parameters
+	initsize=1
+	maxsize=2
+	# db connection parameters
+	#driver=com.mysql.jdbc.Driver
+	#url=jdbc:mysql://localhost:3306/mysql?useSSL=false
+	#user=root
+	#pwd=123456
+	# datesource parameters
+	#initsize=1
+	#maxsize=2
+
+	
+----Dao类中代码
+	public List<Emp> findemp(){
+		Connection conn = null;
+		List<Emp> list = new ArrayList<Emp>();
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "select empno,ename,job from emp_shiweijie";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				Emp e = new Emp();
+				e.setEmpno(rs.getInt("empno"));
+				e.setEname(rs.getString("ename"));
+				e.setJob(rs.getString("job"));
+				
+				list.add(e);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}finally{
+			DBUtil.close(conn);
+		}
+		return list;
+	}
+	
+
+----解决servlet请求和响应数据乱码问题
+  1.请求数据
+  1.1 get请求：
+	修改tomcat配置文件，在server.xml约65行，加URIEncoding="utf-8"
+  1.2 post请求：
+	在接收请求参数前加：req.setCharacterEncoding("utf-8")
+  1.3 get和post都有效：
+    byte[] bs = user.getBytes("iso8859-1");
+	user = new String(bs,"utf-8");
+  2.响应数据
+    在响应数据前加：res.setContentType("text/html;charset=utf-8")
+
+----提交表单
+form有onsubmit事件，点击submit按钮时触发
+form还有submit（），可以通过js调用
+上述2种方式，都可以提交表单中的数据                    	
+<a href="javascript:document.forms[0].submit();"><img src="images/login_btn.png" /></a>
+
+
+----ServletContext（全局的环境变量）
+ servlet组件：
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//tomcat再启动时，会加载每一个部署项目，
+		//并给每个项目创建一个context对象，该对象内有代码自动读取了web.xml中的配置参数。
+		//每个项目内都有唯一的个context，所有的Servlet都可以从context内获取参数
+		ServletContext ctx = getServletContext();
+		String size = ctx.getInitParameter("size");
+		System.out.println(size);
+		
+	}
+web.xml配置:
+	 <!-- 给所有的Servlet预置参数，该参数在tomcat启动并创建context对象是，有context自动读取 -->
+	  <context-param>
+		<param-name>size</param-name>
+		<param-value>10</param-value>
+	  </context-param>
+
+	  
+----重定向：
+servlet组件：
+		//当前：/EmpManager/addEmp
+		//目标：/EmpManager/findEmp
+		res.sendRedirect("findEmp"); //重定向到查询页面：建议浏览器自己去访问查询页面
+
+		
+----转发：
+servlet组件：
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			//查询所有的员工
+			EmpDao dao = new EmpDao();
+			List<Emp> list = dao.findall();
+			//将数据存入request
+			req.setAttribute("emps", list);
+			//将请求转发给JSP
+			//当前：/jsp2/findEmp
+			//目标：/webapp(部署后会改名为jsp2)/emps.jsp
+			req.getRequestDispatcher("emps.jsp").forward(req, res);
+		}
+emps.jsp组件：
+	<%
+		List<Emp> list = (List<Emp>)request.getAttribute("emps");
+	%>
+
+	
+----EL/JSTL语句（访问Bean的属性，支持运算，获取请求参数）（if，choose，forEach，自定义标签）
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<body>
+	<h1>JSTL</h1>
+	<!-- 1.if -->
+	<p>
+		性别：
+		<c:if test="${stu.sex=='M' }">男</c:if>
+		<c:if test="${stu.sex=='F' }">女</c:if>
+	</p>
+	<!-- 2.choose -->
+	<p>
+		性别：
+		<c:choose>
+			<c:when test="${stu.sex=='M' }">男</c:when>
+			<c:otherwise>女</c:otherwise>
+		</c:choose>
+	</p>
+	<!-- 3.forEach -->
+	<p>
+		<c:forEach items="${stu.interests }" var="i">
+			${i}
+		</c:forEach>
+	</p>
+	<!-- 4.自定义标签 -->
+	<p>
+		<s:sysdate format="yyyy年MM月dd日"/>
+	</p>
+	
+	<h1>EL</h1>
+	<!-- 1.访问Bean的属性 -->
+	<!-- request.getAttribute("stu").getName() -->
+	<p>姓名：${stu.name }</p>
+	<p>年龄：${stu["age"] }</p>
+	<!-- request.getAttribute("stu").getCourse().getId() -->
+	<p>课程：${stu.course.id }</p>
+	<!-- 
+		EL默认从如下4个隐含对象中依次取值：
+		page->request->session->application
+		也可以明确指定取值范围：
+		requestScope.stu.sex -->
+	<p>性别：${requestScope.stu.sex }</p>	
+	<!-- 2.支持运算 -->
+	<p>年龄+5:${stu.age+5 }</p>
+	<p>介于20-30间：${stu.age>20&&stu.age<30 }</p>
+	<p>判空：${empty stu.interests }</p>
+	<!-- 3.获取请求参数 -->
+	<!-- request.getParameter("user") -->
+	<p>参数：${param.user }</p>
+	</body>
+	
+
+----Servlet异常处理，跳转到指定页面
+web.xml中的配置参数：	
+	<!-- 配置错误处理页面 
+  	在捕获到哪种错误时自动转发到哪个页面
+  	由于转发只局限于项目内部资源，所以在写绝对路径时，服务器会自动增加项目名-->
+	  <error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/WEB-INF/error.jsp</location>
+	  </error-page>
+
+
+----cookie
+--基本语法：
+	接收数据：				String code = req.getParameter("code");
+	创建cookie,保存数据:	Cookie c1 = new Cookie("user",code);
+	声明cookie的有效时间：	c1.setMaxActive(6000);  //单位为秒
+	发送cookie：			res.addCookie(c1);
+	设置cookie的有效路径：	c2.setPath("jsp4"); //在/main/login下创建的cookie,只对/main路径及下级路径有效
+
+--在jsp中获取cookie的值
+	<!-- 
+	EL默认的取值范围：
+		pageContext,request,session,application
+	若想从cookie中取值，语法：
+		cookie.NAME.value -->
+	<img src="images/logo.png" alt="logo" class="left"/>
+	<span>${cookie.user.value }</span>
+	<a href="#">[退出]</a>
+	
+--LoginServlet：使用cookie保存接收到的数据
+	//模拟的是NetCTOSS中的login()
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//接收账号
+		String code = req.getParameter("code");
+		//将其存入cookie,1个cookie只能存一份String数据。
+		Cookie c1 = new Cookie("user",code);
+		//声明cookie的有效时间(单位为秒)
+		c1.setMaxAge(6000);
+		//将cookie发送给浏览器
+		res.addCookie(c1);
+		
+		Cookie c2 = new Cookie("city",URLEncoder.encode("北京", "utf-8"));//在cookie中存中文
+		res.addCookie(c2);
+		
+		Cookie c3 = new Cookie("name","Tom");//设置cookie的有效路径
+		c3.setPath("/jsp4");
+		res.addCookie(c3);
+		
+		res.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = res.getWriter();
+		pw.println("<p>成功</p>");
+		pw.close();
+	}
+web.xml中的配置参数。
+
+--IndexServlet：发送cookie保存的数据
+	//模拟的是NetCTOSS中的toIndex()
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//获取cookie
+		Cookie[] cookies = req.getCookies();
+		//向浏览器输出cookie中的数据
+		res.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = res.getWriter();
+		if(cookies!=null){
+			for(Cookie c : cookies){
+				String name = c.getName();
+				String value = URLDecoder.decode(c.getValue(), "utf-8");
+				pw.println(name+":"+value);
+			}
+		}
+		pw.close();
+	}
+web.xml中的配置参数。
+
+--FindCostServlet：验证设置了路径的效果
+	//模拟的是NetCTOSS中的findcost
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//获取
+		Cookie[] cookies = req.getCookies();
+		res.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = res.getWriter();
+		if(cookies!=null){
+			for(Cookie c : cookies){
+				String name = c.getName();
+				String value = c.getValue();
+				pw.println(name+":"+value);
+			}
+		}
+		pw.close();
+	}
+web.xml中的配置参数。
+
+
+----session
+--基本语法：
+	获取数据：String code = req.getParameter("code");
+	存入session：HttpSession session = req.getSession(); //session中可以存任意类型任意数量的数据
+				 session.setAttribute("user",code);
+	从session中获取数据：HttpSession session = req.getSession();
+						 String user = (String)session.getAttribute("user");		
+	移除session中的数据：session.removeAttribute("user");
+	删除Session对象；session.invalidate();
+	修改session的超时时间（默认为30分钟）:
+		<session-config>
+			<session-timeout>30</session-timeout>
+		</session-config>
+						 
+--LoginServlet：使用session保存数据
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//接收账号
+		String code = req.getParameter("code");
+		//存入session
+		//session中可以存任意类型任意数量的数据
+		HttpSession session = req.getSession();
+		session.setAttribute("user", code);
+		
+		res.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = res.getWriter();
+		pw.println("成功");
+		pw.close();
+		
+	}
+web.xml中的配置参数。
+
+--IndexServlet:发送session保存的值到浏览器
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//从session中获取数据
+		HttpSession session = req.getSession();
+		String user = (String)session.getAttribute("user");
+		
+		res.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = res.getWriter();
+		pw.println(session.getId());
+		pw.println(user);
+		pw.close();
+	}
+	
+
+spring框架中使用过滤器(处理请求数据中文乱码问题)
+1.web.xml中的配置参数
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> 
+	
+	
+spring框架中使用拦截器
+1.拦截器类代码:
+	package ineterceptors;
+
+	import javax.servlet.http.HttpServletRequest;
+	import javax.servlet.http.HttpServletResponse;
+
+	import org.springframework.web.servlet.HandlerInterceptor;
+	import org.springframework.web.servlet.ModelAndView;
+
+	public class SomeInterceptor implements HandlerInterceptor {
+
+		/**
+		 * DispatcherServlet收到请求之后,会先调用拦截器的preHandle方法.
+		 * 如果该方法的返回值为true,表示继续向后调用;如果返回值为false,则不再向后调用.
+		 * handler:可以通过该对象获得处理器(Controller)方法的描述(比如方法名,参数类型等)
+		 */
+		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+				throws Exception {
+			System.out.println("preHandle()");
+			return true;
+		}
+
+		/**
+		 * 当处理器(Controller)方法已经执行完毕,正准备将处理结果(ModelAndView)
+		 * 返回给DispatcherServlet之前会执行postHandle方法.
+		 * 注:
+		 * 		可以在该方法中,修改ModelAndView
+		 */
+		public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+				ModelAndView modelAndView) throws Exception {
+			System.out.println("postHandle()");
+			
+		}
+
+		/**
+		 * 请求处理完毕,最后执行的方法.
+		 * ex:处理器方法所抛出的异常
+		 */
+		public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+				throws Exception {
+			System.out.println("afterCompletion()");
+			
+		}
+
+	}	
+2.spring配置文件中的配置:
+	<!-- 配置拦截器 -->
+    <mvc:interceptors>
+    	<mvc:interceptor>
+    		<!-- 拦截所有所有 -->
+    		<mvc:mapping path="/**"/>
+    		<!-- 要排除的路径 -->
+    		<!-- <mvc:exclude-mapping path=""/> -->
+  		<bean class="ineterceptors.SomeInterceptor"></bean> 
+    	</mvc:interceptor>
+    </mvc:interceptors>
+	
+	
+----启动Spring容器
+1.导包: spring-webmvc
+2.添加配置文件: applicationContext.xml	
+3.启动容器
+	public void test1(){
+		//启动spring容器
+		String config = "basic.xml";
+		ApplicationContext ac = new ClassPathXmlApplicationContext(config);
+	}
+	
+----搭建一个springmvc框架做增删改查
+
+
+----使用Spring + MyBatis集成的方式完成t_dept的增删改查操作。
+--1.导包	(mybatis,mybatis-spring,spring-webmvc,spring-jdbc,ojdbc,commons-dbcp)
+  2.添加Spring配置文件	(注入连接池,指定映射文件路径)
+  3.实体类	(属性名与字段名相同)
+  4.映射文件	(写sql语句)
+　5.Mapper映射器	(一个接口)
+　6.配置MapperScannerConfigurer	(指定映射器所在的包,多个包之间用逗号隔开)
+		注:spring+mybatis整合时需要在业务层实现类中注入映射器.
+1.导包
+2.添加Spring配置文件:spring-mybatis.xml
+	<util:properties id="db" location="classpath:db.properties"/>
+	
+	<!-- 连接池 --> 
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{db.driver}"/>
+		<property name="url" value="#{db.url}"/>
+		<property name="username" value="#{db.user}"/>
+		<property name="password" value="#{db.pwd}"/>
+	</bean>
+	 
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<property name="dataSource" ref="ds"/>
+		<!-- 指定映射文件路径 -->
+		<property name="mapperLocations" value="classpath:entity/*.xml"/>
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	<!-- 指定映射器所在的包名 -->
+		<property name="basePackage" value="dao"/>
+	</bean>
+3.实体类: entity.Dept
+4.映射文件:entity.DeptMapper.xml
+	<mapper namespace="dao.DeptDao">
+	<insert id="save" parameterType="entity.Dept">
+		insert into dept_swj values (seq_dept_swj.nextval,#{deptName},#{addr})
+	</insert>
+	
+	<select id="findAll" resultType="entity.Dept">
+		select * from dept_swj
+	</select>
+	
+	<select id="findById" parameterType="int" resultType="entity.Dept">
+		select * from dept_swj where id=#{id1}
+	</select>
+	
+	<update id="update" parameterType="entity.Dept">
+		update dept_swj set deptName=#{deptName},addr=#{addr} where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from dept_swj where id=#{id1}
+	</delete>
+	
+	<!-- 实体类属性与字段名不一致的解决方案 -->
+	<resultMap id="dept111" type="entity.Dept1">
+		<result property="deptno" column="id"/>
+		<result property="name" column="deptName"/>
+	</resultMap>
+	<select id="findById2" parameterType="int" resultMap="dept111">
+		select * from dept_swj where id=#{id1}
+	</select>
+</mapper>
+5.Mapper映射器:dao.DeptDao
+	package dao;
+	
+	import java.util.List;
+	import entity.Dept;
+	
+	public interface DeptDao {
+		//方法名=sqlId,参数类型=parameterType,返回值类型=resultType
+		public List<Dept> findAll();
+		public Dept findById(int id);
+		public void save(Dept d);
+		public void update(Dept d);
+		public void delete(int id);		
+	}	
+6.指定映射器所在的包(在第2步中)
+7.测试:
+	public class TestCase {	
+		private DeptDao dao;
+		
+		@Before
+		public void init(){
+			String config = "spring-mybatis.xml";
+			ApplicationContext ac = new ClassPathXmlApplicationContext(config);
+			dao = ac.getBean("deptDao",DeptDao.class);
+		}
+		
+		@Test
+		public void test1(){
+			List<Dept> d = dao.findAll();
+			System.out.println(d);			
+		}
+		
+		@Test
+		public void test2(){
+			Dept d = new Dept();
+			d.setDeptName("研发部");
+			d.setAddr("北京");
+			dao.save(d);
+		}
+		
+		@Test
+		public void test3(){
+			Dept1 d = dao.findById2(2);
+			System.out.println(d);
+		}
+
+----Struts2下载图片
+1.控制器
+	public class ImageAction {
+		private InputStream image;
+		public InputStream getImage() {
+			return image;
+		}
+		public void setImage(InputStream image) {
+			this.image = image;
+		}
+		
+		public String execute(){
+			//生成图片...
+			byte[] data;
+			try {
+				data = createPngImage();
+				image = new ByteArrayInputStream(data);
+				return "img";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "error";
+			}			
+		}
+		
+		public byte[] createPngImage() throws IOException{
+			//创建BufferedImage对象
+			BufferedImage img = new BufferedImage(200, 100, BufferedImage.TYPE_3BYTE_BGR);
+			img.setRGB(0, 0, 0xff0000);
+			img.setRGB(100, 50, 0xffff00);
+			//利用API将图片对象编码为png
+			//酱油瓶子out(变长byte数组)
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ImageIO.write(img, "png", out);
+			//在获取PNG数据数组
+			out.close();
+			//从酱油瓶子中倒出数据(byte[])
+			byte[] data = out.toByteArray();
+			return data;			
+		}
+	}
+2.配置文件(struts.xml)
+<struts>
+	<!-- 
+		name 属性就是一个标识,写啥都行,不能重复
+		namespace 用于声明第一层请求web路径
+		http://localhost:8080/ssh1/demo
+		extends 用于继承Struts2的默认配置
+	 -->
+	<package name="demo"  namespace="/demo"  extends="struts-default">
+	
+		<!-- 利用Stream Result动态下载图片 -->
+		<action name="img" class="cn.tedu.action.ImageAction">  <!-- "img"为第二层请求web路径 -->
+			<result name="img" type="stream">
+				<param name="inputName">image</param> 										<!-- "image"为流名称 -->
+				<param name="contentType">image/png</param>  								<!-- 在comcat文件夹下的conf中的web.xml中查找 -->
+				<param name="contentDisposition">attachment;filename="tupian.png"</param> 	<!-- "tupian.png"文件名和后缀 -->
+			</result>
+			<result name="error" >
+				/WEB-INF/jsp/error.jsp
+			</result>
+		</action>
+	</package>
+</struts>
+
+
+----Struts2下载excel表
+1.控制器
+	public class ExcelAction {
+		private InputStream excel;
+		public InputStream getExcel() {
+			return excel;
+		}
+		public void setExcel(InputStream excel) {
+			this.excel = excel;
+		}		
+		
+		public String execute(){
+			byte[] data;
+			try {
+				data = createExcel();
+				this.excel=new ByteArrayInputStream(data);
+				return "exl";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "error";
+			}
+		}
+
+		public byte[] createExcel() throws IOException {
+			//Apache poi 生成Excel的jar包
+			//工作簿>工作表>行>格子
+			HSSFWorkbook workbook = new HSSFWorkbook(); //创建工作簿
+			HSSFSheet sheet = workbook.createSheet("演示"); //在工作簿中创建工作表
+			HSSFRow row = sheet.createRow(0); //工作表里创建数据行
+			HSSFCell c1 = row.createCell(0); //在行中创建格子
+			c1.setCellValue("编号"); //在格子中添加内容
+			row.createCell(1).setCellValue("内容");
+			row = sheet.createRow(1);
+			row.createCell(0).setCellValue("1");
+			row.createCell(1).setCellValue("Hello World!");
+			//将Excel对象转换为数据
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			workbook.write(out);
+			out.close();
+			
+			byte[] data = out.toByteArray();
+			return data;
+	}
+2.配置文件(struts.xml)
+<struts>
+	<!-- 
+		name 属性就是一个标识,写啥都行,不能重复
+		namespace 用于声明第一层请求web路径
+		http://localhost:8080/ssh1/demo
+		extends 用于继承Struts2的默认配置
+	 -->
+	<package name="demo"  namespace="/demo"  extends="struts-default">
+	
+		<!-- 利用Stream Result下载excel表 -->
+		<action name="excel" class="cn.tedu.action.ExcelAction">			<!-- "excel"为第二层请求web路径 -->
+			<result name="exl" type="stream">  
+				<param name="inputName">excel</param>										<!-- "excel"为流名称 -->
+				<param name="contentType">application/vnd.ms-excel</param>  				<!-- 在comcat文件夹下的conf中的web.xml中查找 -->
+				<param name="contentDisposition">attachment;filename="hello.xls"</param> 	<!-- "hello.xls"文件名和后缀 -->
+			</result>
+			<result name="error" >
+				/WEB-INF/jsp/error.jsp
+			</result>
+		</action>
+	</package>
+</struts>

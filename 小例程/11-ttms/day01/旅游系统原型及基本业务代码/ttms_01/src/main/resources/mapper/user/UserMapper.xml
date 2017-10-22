@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.user.mapper.UserMapper">
+	<!-- 查询产品经理姓名 -->
+	<select id="getMgrNameById" parameterType="int" resultType="String">
+		select
+			name
+		from 
+			aut_users
+		where 
+			userId=#{prodMgrId}
+	</select>
+	
+	<!-- 取得用户信息 -->
+	<select id="selectUser" resultType="cn.tedu.ttms.user.entity.User">
+		select * , (SELECT
+		GROUP_CONCAT(aug.grpName SEPARATOR ',')
+		FROM aut_user_groups aug
+		where INSTR(aut_users.grpIds,aug.grpId)
+		GROUP BY aut_users.grpIds
+		) as deptNames from aut_users
+		<where>
+			<if test="user!=null and user.userName!=null and user.userName!=''">
+				userName=#{user.userName}
+			</if>
+			<if test="user!=null and user.password!=null and user.password!=''">
+				and password=#{user.password}
+			</if>
+		</where>
+		<if
+			test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+			LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+	</select>
+
+	<!-- 取得类别 -->
+	<select id="selectUserClass" resultType="cn.tedu.ttms.user.entity.User">
+		select name as
+		userClassName,value as userClass from sys_parameters where
+		category='userClass'
+	</select>
+
+	<!-- 取得属性 -->
+	<select id="selectUserType" resultType="cn.tedu.ttms.user.entity.User">
+		select name as
+		userTypeName,value as userType from sys_parameters where
+		category='userType'
+	</select>
+
+	<!-- 取得权限下拉框 -->
+	<select id="selectUserRole" resultType="cn.tedu.ttms.user.entity.User">
+		select roleId,roleName
+		from aut_roles where valid=1
+	</select>
+
+	<!-- 查询用户所属公司名称 -->
+	<select id="selectUserOrgName" resultType="java.lang.String">
+		select name from
+		res_companies where compId=#{id}
+	</select>
+
+	<!-- 查询用户所属部门信息 -->
+	<select id="selectUserGrpName" resultType="java.lang.String">
+		select grpName from
+		aut_user_groups where grpId=#{id}
+	</select>
+	
+
+	<!-- 查询用户权限角色名称 -->
+	<select id="selectUserRoleName" resultType="cn.tedu.ttms.user.entity.User">
+		select *from
+		aut_user_roles aur left join aut_roles ar on aur.roleId=ar.roleId
+		where userId=#{id}
+	</select>
+
+	<!-- 取得数据条数 -->
+	<select id="GetRecordCount" resultType="java.lang.Integer">
+		select count(0) from aut_users
+		<where>
+			<if test="1==1">
+				1=1
+			</if>
+			<if test="user!=null and user.userId!=null and user.userId!=''">
+				and userId= #{user.userId}
+			</if>
+			<if test="user!=null and user.userType!=null and user.userType!=''">
+				and userType like concat ('%',#{user.userType},'%')
+			</if>
+			<if test="user!=null and user.userClass!=null and user.userClass!=''">
+				and userClass like concat ('%',#{user.userClass},'%')
+			</if>
+			<if test="user!=null and user.gender!=null and user.gender!=''">
+				and gender=#{user.gender}
+			</if>
+			<if test="user!=null and user.selectData!=null and user.selectData!=''">
+				and userId like concat ('%',#{user.selectData},'%') or
+				userId like concat ('%',#{user.selectData},'%') or
+				userName like concat ('%',#{user.selectData},'%') or
+				eMail like concat ('%',#{user.selectData},'%') or
+				phone like concat ('%',#{user.selectData},'%') or
+				note like concat ('%',#{user.selectData},'%')
+			</if>
+		</where>
+	</select>
+	<!-- group_concat([DISTINCT] 要连接的字段 [Order BY ASC/DESC 排序字段] [Separator 
+		'分隔符']) 以id分组，把name字段的值打印在一行，分号分隔 mysql> select id,group_concat(name separator 
+		';') from aa group by id; 
+		
+		instr()
+		在一个字符串中查找指定的字符,返回被查找到的指定的字符的位置。 instr(sourceString,destString,start,appearPosition) 
+		instr（'源字符串' , '目标字符串' ,'开始位置','第几次出现'） -->
+	<select id="selectUserList" resultType="cn.tedu.ttms.user.entity.User">
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		userId,
+		userName,
+		NAME,
+		gender,
+		password,
+		grpIds,
+		orgIds,
+		userType,
+		userClass,
+		regDate,
+		eMail,
+		phone,
+		note,
+		valid,
+		userClassName,
+		userTypeName,
+		(SELECT
+		GROUP_CONCAT(aug.grpName SEPARATOR ',')
+		FROM aut_user_groups aug
+		where INSTR(au.grpIds,aug.grpId)
+		GROUP BY au.grpIds
+		) as deptNames
+		FROM
+		aut_users au
+		LEFT JOIN (
+		SELECT
+		NAME AS userClassName,
+
+		VALUE
+		AS classValue
+		FROM
+		sys_parameters
+		WHERE
+		category = 'userClass'
+		) sp ON au.userClass = sp.classValue
+		LEFT JOIN (
+		SELECT
+		NAME AS userTypeName,
+
+		VALUE
+		AS typeValue
+		FROM
+		sys_parameters
+		WHERE
+		category = 'userType'
+		) sp2 ON au.userType = sp2.typeValue
+		) userList
+
+		<where>
+			<if test="1==1">
+				1=1
+			</if>
+			<if test="user!=null and user.userId!=null and user.userId!=''">
+				and userList.userId= #{user.userId}
+			</if>
+			<if test="user!=null and user.userType!=null and user.userType!=''">
+				and userList.userType like concat ('%',#{user.userType},'%')
+			</if>
+			<if test="user!=null and user.userClass!=null and user.userClass!=''">
+				and userList.userClass like concat ('%',#{user.userClass},'%')
+			</if>
+			<if test="user!=null and user.gender!=null and user.gender!=''">
+				and userList.gender=#{user.gender}
+			</if>
+			<if test="user!=null and user.selectData!=null and user.selectData!=''">
+				and userList.userId like concat ('%',#{user.selectData},'%') or
+				userList.userId like concat ('%',#{user.selectData},'%') or
+				userList.userName like concat ('%',#{user.selectData},'%') or
+				userList.eMail like concat ('%',#{user.selectData},'%') or
+				userList.phone like concat ('%',#{user.selectData},'%') or
+				userList.note like concat ('%',#{user.selectData},'%')
+			</if>
+		</where>
+		ORDER BY userId ASC
+		<if
+			test="pageObj!=null and pageObj.pageSize != 0 and pageObj.pageSize != null">
+			LIMIT #{pageObj.startIndex},#{pageObj.pageSize}
+		</if>
+	</select>
+
+	<!-- 新增用户 -->
+	<insert id="addUser" parameterType="cn.tedu.ttms.user.entity.User">
+		insert into
+		aut_users(userId,userName,name,gender,password,grpIds,orgIds,userType,userClass,regDate,eMail,phone,valid,createdUser,createdTime,modifiedUser,modifiedTime,note)
+		values((
+		SELECT concat('U',IFNULL(Lpad(Max(substring(temp.userId, 2)) +
+		1,9,'0'),'000000001')) FROM aut_users temp),
+		#{user.userName},
+		#{user.name},
+		#{user.gender},
+		#{user.password},
+		#{user.grpIds},
+		#{user.orgIds},
+		#{user.userType},
+		#{user.userClass},
+		#{user.regDate},
+		#{user.eMail},
+		#{user.phone},
+		#{user.valid},
+		#{user.modifiedUser},
+		NOW(),
+		#{user.modifiedUser},
+		NOW(),
+		#{user.note}
+		)
+	</insert>
+
+	<!-- 更新用户权限 -->
+	<delete id="delUpdateUserRole">
+		delete from aut_user_roles where userId in
+		<foreach collection="userIds" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<insert id="updateUserRole" parameterType="cn.tedu.ttms.user.entity.User">
+		insert into
+		aut_user_roles(roleId,userId,createdUser,createdTime,modifiedUser,modifiedTime)
+		values(#{user.roleId},(SELECT
+		concat('U',IFNULL(Lpad(Max(substring(temp.userId, 2)) + 1
+		,9,'0'),'000000001')) FROM aut_users
+		temp),#{user.modifiedUser},NOW(),#{user.modifiedUser},NOW())
+	</insert>
+	<insert id="updateUserRole2" parameterType="cn.tedu.ttms.user.entity.User">
+		insert into
+		aut_user_roles(roleId,userId,createdUser,createdTime,modifiedUser,modifiedTime)
+		values(#{user.roleId},#{user.userId},#{user.modifiedUser},NOW(),#{user.modifiedUser},NOW())
+	</insert>
+
+	<!-- 更新用户启用禁用 -->
+	<update id="updateUserValid" parameterType="cn.tedu.ttms.user.entity.User">
+		update aut_users set
+		valid =#{user.valid}, modifiedUser=#{user.modifiedUser},
+		modifiedTime=NOW() where userId=#{user.userId}
+	</update>
+
+	<!-- 更新用户 -->
+	<update id="updateUser" parameterType="cn.tedu.ttms.user.entity.User">
+		update aut_users
+		<set>
+			<if test="user!=null and user.userName!=null and user.userName!=''">
+				userName=#{user.userName},
+			</if>
+			<if test="user!=null and user.name!=null and user.name!=''">
+				name=#{user.name},
+			</if>
+			<if test="user!=null and user.gender!=null and user.gender!=''">
+				gender=#{user.gender},
+			</if>
+			<if test="user!=null and user.password!=null and user.password!=''">
+				password=#{user.password},
+			</if>
+			<if test="user!=null and user.orgIds!=null and user.orgIds!=''">
+				orgIds=#{user.orgIds},
+			</if>
+			<if test="user!=null and user.note!=null and user.note!=''">
+				note=#{user.note},
+			</if>
+			<if test="user!=null and user.grpIds!=null and user.grpIds!=''">
+				grpIds=#{user.grpIds},
+			</if>
+			<if test="user!=null and user.userType!=null and user.userType!=''">
+				userType=#{user.userType},
+			</if>
+			<if test="user!=null and user.userClass!=null and user.userClass!=''">
+				userClass=#{user.userClass},
+			</if>
+			<if test="user!=null and user.eMail!=null and user.eMail!=''">
+				eMail=#{user.eMail},
+			</if>
+			<if test="user!=null and user.phone!=null and user.phone!=''">
+				phone=#{user.phone},
+			</if>
+			<if test="user!=null and user.valid!=null and user.valid!=''">
+				valid=#{user.valid},
+			</if>
+			<if test="user!=null and user.phone!=null and user.phone!=''">
+				modifiedUser=#{user.modifiedUser},
+			</if>
+			<if test="1==1">
+				modifiedTime=Now(),
+			</if>
+		</set>
+		where userId=#{user.userId}
+	</update>
+
+	<!-- 删除用户 -->
+	<delete id="delUser" parameterType="java.lang.String">
+		delete from tbl_user where
+		user_name=#{userName}
+	</delete>
+
+	<!-- 取得用户联系方式 -->
+	<select id="selectContactInfo" resultType="cn.tedu.ttms.user.entity.ContactInfo">
+		select id,user_name as userName,contact_info as
+		contactInfo,contact_type as contactType from tbl_contact_info
+		<where>
+			<if
+				test="contactInfo!=null and contactInfo.userName!=null and contactInfo.userName!=''">
+				binary user_name=#{contactInfo.userName}
+			</if>
+			<if
+				test="contactInfo!=null and contactInfo.contactType!=null and contactInfo.contactType!=''">
+				and contact_type=#{contactInfo.contactType}
+			</if>
+		</where>
+	</select>
+
+	<!-- 验证用户Id是否重复 -->
+	<select id="checkUserId" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select count(0) from aut_users where userName=#{userName}
+	</select>
+
+	<!-- 删除用户 -->
+	<delete id="deleteUser" parameterType="cn.tedu.ttms.user.entity.User">
+		delete from aut_users where userId in
+		<foreach collection="userIds" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 删除用户联系方式 -->
+	<delete id="delContactInfo" parameterType="cn.tedu.ttms.user.entity.ContactInfo">
+		delete from tbl_contact_info where user_name=#{contactInfo.userName}
+		<if
+			test="contactInfo!=null and contactInfo.contactInfo!=null and contactInfo.contactInfo!=''">
+			and contact_info=#{contactInfo.contactInfo}
+		</if>
+	</delete>
+
+	<!-- 批量新增用户联系方式 -->
+	<insert id="addContactInfo" parameterType="cn.tedu.ttms.user.entity.ContactInfo">
+		insert into
+		tbl_contact_info(user_name,contact_info,contact_type)
+		values(#{contactInfo.userName},#{contactInfo.contactInfo},#{contactInfo.contactType})
+	</insert>
+
+	<!-- 新增用户角色 -->
+	<insert id="addUserRole" parameterType="cn.tedu.ttms.user.entity.UserRole">
+		insert into
+		tbl_user_role(user_name,role_id)
+		values(#{userRole.userName},#{userRole.roleId})
+	</insert>
+
+	<!-- 删除用户角色 -->
+	<delete id="delUserRole" parameterType="java.lang.String">
+		delete from tbl_user_role
+		where user_name=#{userName}
+	</delete>
+
+	<!-- 取得用户对应的角色 -->
+	<select id="selectRoleByUser" parameterType="java.lang.String"
+		resultType="cn.tedu.ttms.user.entity.UserRole">
+		select user_name as userName,role_id as roleId from
+		tbl_user_role where user_name=#{userName}
+	</select>
+
+	<!-- 取得用户的权限菜单 -->
+	<select id="selectMenuByUser" parameterType="java.lang.String"
+		resultType="cn.tedu.ttms.user.entity.Menu">
+		select menu.menu_id as menuId,menu_name as
+		menuName,link_url as linkUrl,icon,parent_menu as parentMenu,sort_level
+		as sortLevel
+		from tbl_menu menu,tbl_menu_role menuRole,tbl_user_role
+		userRole
+		where menu.menu_id=menuRole.menu_id and
+		menuRole.role_id=userRole.role_id and user_name=#{userName}
+		order by
+		sort_level
+	</select>
+	<!-- 根据渠道id查询渠道商的compId -->
+	<select id="selOrgId" resultType="java.lang.String">
+		select compId from dist_channels dc,res_companies rc where dc.chncId=rc.id and dc.id=#{id}
+	</select>
+	
+	<!-- 取得产品经理 -->
+	<select id="findProjectManagers" resultType="map">
+		select 
+			userId,
+			name 
+		from 
+			aut_users
+		<where>
+			valid=1  and 
+			userType = 0 and 
+			userClass = 1
+		</where>
+	</select>	
+
+</mapper>

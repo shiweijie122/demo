@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.mapper.ProductTourSchedualMapper">
+	<!-- 保存产品日程 -->
+	<insert id="saveProductTourSchedual" parameterType="cn.tedu.ttms.product.entity.ProductTourSchedual">
+		insert into
+			product_tour_schedual(prodId,scheName,dayNumber,
+			schedualContent,lodgeMessage,breakFastMessage,lunchMessage,
+			dinnerMessage,createdUser,createdTime,modifiedUser,modifiedTime)
+		values
+			(#{schedual.prodId},#{schedual.scheName},#{schedual.dayNumber},
+			#{schedual.schedualContent},#{schedual.lodgeMessage},#{schedual.breakFastMessage},
+			#{schedual.lunchMessage},#{schedual.dinnerMessage},#{schedual.createdUser},NOW(),
+			#{schedual.modifiedUser},NOW())
+	</insert>
+	
+	<!-- 判断指定天数是否存在日程内容 -->
+	<select id="isExistDaySchedual" resultType="java.lang.Integer">
+		select
+			id
+		from 
+			product_tour_schedual
+		where
+			prodId=#{prodId}
+		and 
+			dayNumber = #{dayNumber}
+	</select>
+	
+	<!-- 查询指定天数的日程 -->
+	<select id="findDayNumberSchedual" resultType="map" >
+		select 
+			id,
+			scheName,
+			schedualContent,
+			lodgeMessage,
+			breakFastMessage,
+			lunchMessage,
+			dinnerMessage
+		from 
+			product_tour_schedual
+		where
+			prodId=#{prodId}
+		and 
+			dayNumber = #{dayNumber}
+			
+	</select>
+	
+	<!-- 修改产品日程 -->
+	<update id="updateSchedual" parameterType="cn.tedu.ttms.product.entity.ProductTourSchedual">
+		update 
+			product_tour_schedual
+		set
+			scheName = #{schedual.scheName},
+			schedualContent = #{schedual.schedualContent},
+			lodgeMessage = #{schedual.lodgeMessage},
+			breakFastMessage = #{schedual.breakFastMessage},
+			lunchMessage = #{schedual.lunchMessage},
+			dinnerMessage = #{schedual.dinnerMessage}
+		where 
+			id=#{schedual.id}
+	</update>
+	
+</mapper>

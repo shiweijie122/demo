@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>day04</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>一.config和context的应用</h1>
+<h2>1.config应用场景</h2>
+<ul>
+<li>假设要开发一个页游,要限制最大在线人数.</li>
+<li>即:在登录功能LoginServlet中加以判断.</li>
+<li>其中最大在线人数maxOnline要求可配置.</li>
+</ul>
+<blockquote>
+<p>该参数只有LoginServlet自己用,所以用config读取即可.</p>
+</blockquote>
+<h2>2.context应用场景</h2>
+<ul>
+<li>软件内往往包含很多查询功能,一般都支持分页.</li>
+<li>每页显示的行数(size)通常是要求可配的.</li>
+</ul>
+<blockquote>
+<p>由于该参数是在多个功能间共用,所以用context读取.</p>
+</blockquote>
+<h2>3.context特殊用法</h2>
+<ul>
+<li>它不但可以读取常量,还可以读写变量,这些变量也是被共用的.</li>
+<li>假设要开发一个统计网站流量的功能.</li>
+<li>流量是变量,而且访问任何功能都要累加此变量,是要共用的.</li>
+<li>适合采用context来读写.</li>
+</ul>
+<h1>二.Servlet线程安全问题</h1>
+<ul>
+<li>解决方案:加锁
+<img src="1.png" /></li>
+</ul>
+<h1>三.JSP</h1>
+<h2>1.jsp的作用</h2>
+<ul>
+<li>它的作用与Servlet一样</li>
+<li>它的书写方式要比Servlet简化</li>
+</ul>
+<h2>2.jsp的语法</h2>
+<ul>
+<li>jsp表达式</li>
+<li>jsp脚本</li>
+<li>jsp声明</li>
+</ul>
+<h2>3.指令</h2>
+<ul>
+<li>page</li>
+<li>include
+<img src="2.png" /></li>
+</ul>
+<h2>4.jsp原理</h2>
+<ul>
+<li>jsp的本质就是Servlet
+<img src="3.png" /></li>
+</ul>
+<h2>5.翻译的过程</h2>
+<p><img src="4.png" /></p>
+<h2>6.翻译的结果</h2>
+<p><img src="5.png" /></p>
+<h1>四.jsp隐含对象(面试题)</h1>
+<h2>1.request(*)</h2>
+<ul>
+<li>HttpServletRequest</li>
+</ul>
+<h2>2.response</h2>
+<ul>
+<li>HttpServletResponse</li>
+</ul>
+<h2>3.out</h2>
+<ul>
+<li>JSPWriter</li>
+</ul>
+<h2>4.config</h2>
+<ul>
+<li>ServletConfig</li>
+</ul>
+<h2>5.application</h2>
+<ul>
+<li>ServletContext</li>
+</ul>
+<h2>6.exception</h2>
+<ul>
+<li>Throwable</li>
+</ul>
+<h2>7.session(*)</h2>
+<ul>
+<li>HttpSession</li>
+</ul>
+<h2>8.page</h2>
+<ul>
+<li>Object</li>
+<li>值为this,指代翻译所得的Servlet对象</li>
+</ul>
+<h2>9.pageContext(*)</h2>
+<ul>
+<li>PageContext</li>
+<li>是一个管理者,可以管理其他8个对象</li>
+</ul>
+<h2>如何使用隐含对象?</h2>
+<ul>
+<li>在jsp上直接引用</li>
+<li>&lt;%String user = request.getParameter(&quot;user&quot;);%&gt;</li>
+<li>&lt;%=request.getParameter(&quot;user&quot;)%&gt;</li>
+</ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
